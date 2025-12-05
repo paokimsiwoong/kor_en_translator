@@ -1,0 +1,26 @@
+# 모델 경로
+MODEL_PATH: "models/transformer_koren_20251205_210858_latest.pth"
+
+# 토크나이저
+TOKENIZER_NAME: "KETI-AIR/ke-t5-base"
+
+# vocab / 토큰 인덱스들
+LEN_VOCAB: 64101
+START_IDX: 64100
+END_IDX: 1
+PADDING_IDX: 0
+UNK_IDX: 2
+
+# 모델 차원
+Q_DIM: 512
+
+# weight tying 방식 (Enum 이름과 일치해야 함)
+WEIGHT_TYING: "NOTYING"      # NOTYING, TYINGALL, TYINGSRCTGT, TYINGTGTFFC, TYINGSRCFFC 중 하나
+
+# 시각화 옵션
+VISUALIZATION: true          # true / false
+HTML_PATH: "models"
+
+# 인퍼런스 관련
+MAX_LENGTH: 512
+BATCH_SIZE: 1
