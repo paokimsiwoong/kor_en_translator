@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-import blocks, embeddings, pe
+from . import blocks, embeddings, pe
 
 from ..core.config import settings, WeightTying
 
@@ -292,6 +292,14 @@ class Transformer(nn.Module):
             eos_in_sentence = (ys == self.end_idx).any(dim=1)
             if eos_in_sentence.all():
                 break
+        
+        # @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+        # 배치 내의 모든 생성 문장이 최대길이를 넘겨서 eos 토큰이 나오기 전에 루프가 종료된 경우 예외 처리
+        if not (ys == self.end_idx).any():
+            eos = torch.zeros(n_batch, 1, device=device).fill_(self.end_idx).type_as(x)
+            ys = torch.cat([ys, eos], dim=1)
+        # @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
 
         # end token 뒷부분 마스킹 처리
 
@@ -328,7 +336,6 @@ class Transformer(nn.Module):
         # (seq_indices > eos_positions)[0] = [False, False, False, False, False, False, True, True, True, True, ....]
 
         ys.masked_fill_(mask, value=self.padding_idx)
-
         # labels와 동일하게 시작토큰을 제외
         return ys[:, 1:]
 

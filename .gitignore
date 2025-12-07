@@ -8,3 +8,5 @@ pths/
 test_*.ipynb
 
 *.pth
+
+models/test

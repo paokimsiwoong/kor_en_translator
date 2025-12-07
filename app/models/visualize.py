@@ -45,17 +45,18 @@ def visualize(html_dir, folder_name, model, tokenizer, inputs, preds, n_examples
 
     for j, r in enumerate(results):
         file_name = osp.join(folder_path, f"encoder_self_{j}.html")
-        viz_encoder_self(model, r, file_name)
+        viz_encoder_self(model, j, r, file_name)
         file_name = osp.join(folder_path, f"decoder_self_{j}.html")
-        viz_decoder_self(model, r, file_name)
+        viz_decoder_self(model, j, r, file_name)
         file_name = osp.join(folder_path, f"decoder_src_{j}.html")
-        viz_decoder_src(model, r, file_name)
+        viz_decoder_src(model, j, r, file_name)
 
 
 
 
 def mtx2df(m, max_row, max_col, row_tokens, col_tokens):
     "convert a dense matrix to a data frame with row and column indices"
+    # m은 (q_seq_len, k_seq_len) 형태
     return pd.DataFrame(
         [
             (
@@ -74,11 +75,14 @@ def mtx2df(m, max_row, max_col, row_tokens, col_tokens):
         # if float(m[r,c]) != 0 and r < max_row and c < max_col],
         columns=["row", "column", "value", "row_token", "col_token"],
     )
+    # [(row, column, attention 값, "row row토큰", "column column토큰"), ....] 형태의 리스트를
+    # columns=["row", "column", "value", "row_token", "col_token"]로 열 이름을 설정한 뒤 pd DF로 생성
+    # # @@@ query가 row, key가 col ==> decoder의 cross attention에서는 query가 영어, key가 한국어
 
 
-def attn_map(attn, layer, head, row_tokens, col_tokens, max_dim=30):
+def attn_map(attn, j, head, row_tokens, col_tokens, max_dim=30):
     df = mtx2df(
-        attn[0, head].data, # attn은 (batch, head, q_seq_len, k_seq_len) ==> 지정된 head의 (q_seq_len, k_seq_len) 부분만 추출
+        attn[j, head].data, # attn은 (batch, head, q_seq_len, k_seq_len) ==> 지정된 head의 (q_seq_len, k_seq_len) 부분만 추출
         max_dim,
         max_dim,
         row_tokens,
@@ -91,8 +95,8 @@ def attn_map(attn, layer, head, row_tokens, col_tokens, max_dim=30):
         alt.Chart(data=df)
         .mark_rect()
         .encode(
-            x=alt.X("col_token", axis=alt.Axis(title="")),
-            y=alt.Y("row_token", axis=alt.Axis(title="")),
+            x=alt.X("col_token", axis=alt.Axis(title="")), # 그래프 X축 == col(key)
+            y=alt.Y("row_token", axis=alt.Axis(title="")), # 그래프 Y축 == row(query)
             color="value",
             tooltip=["row", "column", "value", "row_token", "col_token"],
         )
@@ -113,7 +117,7 @@ def get_decoder_self(model, layer):
 def get_decoder_src(model, layer):
     return model.decoder.blocks[layer].MHA.attn
 
-def visualize_layer(model, layer, getter_fn, ntokens, row_tokens, col_tokens):
+def visualize_layer(model, layer, getter_fn, j, ntokens, row_tokens, col_tokens):
     # ntokens = last_example[0].ntokens
     attn = getter_fn(model, layer)
     n_heads = attn.shape[1]
@@ -121,7 +125,7 @@ def visualize_layer(model, layer, getter_fn, ntokens, row_tokens, col_tokens):
     charts = [
         attn_map(
             attn,
-            0,
+            j,
             h,
             row_tokens=row_tokens,
             col_tokens=col_tokens,
@@ -146,10 +150,10 @@ def visualize_layer(model, layer, getter_fn, ntokens, row_tokens, col_tokens):
 
     return combined_chart
 
-def viz_encoder_self(model, r, file_name):
+def viz_encoder_self(model, j, r, file_name):
     layer_viz = [
         visualize_layer(
-            model, layer, get_encoder, len(r[0]), r[0], r[0] # r[0]은 decoded_inputs ==> len(r[0])로 input의 토큰 개수 입력
+            model, layer, get_encoder, j, len(r[0]), r[0], r[0] # r[0]은 decoded_inputs ==> len(r[0])로 input의 토큰 개수 입력
         )
         for layer in range(6)
     ]
@@ -166,12 +170,13 @@ def viz_encoder_self(model, r, file_name):
 
     encoder_self_chart.save(file_name)
 
-def viz_decoder_self(model, r, file_name):
+def viz_decoder_self(model, j, r, file_name):
     layer_viz = [
         visualize_layer(
             model,
             layer,
             get_decoder_self,
+            j,
             len(r[2]),
             r[2],
             r[2],
@@ -191,17 +196,19 @@ def viz_decoder_self(model, r, file_name):
 
     decoder_self_chart.save(file_name)
 
-def viz_decoder_src(model, r, file_name):
+def viz_decoder_src(model, j, r, file_name):
+    ntokens = max(len(r[0]),len(r[2]))
     layer_viz = [
         visualize_layer(
             model,
             layer,
             get_decoder_src,
-            max(len(r[0]),len(r[2])),
+            j,
+            ntokens,
+            r[2], # @@@ decoder의 cross attention query는 ys(preds) 
             r[0],
-            r[2],
-            # r[0]은 decoded_inputs
             # r[2]은 decoded_preds
+            # r[0]은 decoded_inputs
         )
         for layer in range(6)
     ]
