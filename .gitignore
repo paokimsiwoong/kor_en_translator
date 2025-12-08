@@ -1,3 +1,6 @@
+# 이 .gitignore 파일 자체도 git이 무시하라고 알려주기
+.gitignore
+
 __pycache__/
 
 .venv

@@ -27,6 +27,9 @@ def load_config(path: str = "config.yaml") -> dict:
 _cfg = load_config()  # 모듈 import 시 1번만 읽음
 
 
+# TODO: pydantic BaseSettings 사용해보기
+# from pydantic import BaseSettings
+# class Settings(BaseSettings):
 class Settings:
     MODEL_PATH: str = _cfg.get("MODEL_PATH", "models/ko_en_transformer.pth")
 

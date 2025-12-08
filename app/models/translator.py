@@ -1,3 +1,6 @@
+# app/models/translator.py
+# 번역에 사용되는 모델을 초기화하고 추론을 진행하는 코드 
+
 import torch
 
 from transformers import AutoTokenizer
@@ -48,13 +51,13 @@ class TranslatorService:
             special_tokens_dict = {'bos_token': '<s>'}
             self.tokenizer.add_special_tokens(special_tokens_dict)
             
-            print(f"✅ Model loaded on {self.device}")
+            print(f"Model loaded on {self.device}")
         except Exception as e:
-            print(f"❌ Model loading failed: {e}")
+            print(f"Model loading failed: {e}")
             raise
 
     @torch.no_grad()
-    def translate(self, texts: List[str], viz: bool, user_name: str) -> List[str]:
+    def translate(self, texts: List[str], inference_max_length:int, viz: bool, user_name: str) -> List[str]:
         """greedy decoding"""
 
         # 전처리
@@ -73,7 +76,7 @@ class TranslatorService:
         
 
         # 모델 추론
-        preds = self.model.inference(x, x_mask, x.size(-1) * 2, viz)
+        preds = self.model.inference(x, x_mask, inference_max_length, viz)
         # (batch_size, pred_seq_len)
         # @@@ 최대 추론 길이 단순히 settings.MAX_LENGTH를 대신 사용?
 
