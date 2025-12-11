@@ -2,8 +2,10 @@
 # /translate 엔드포인트 관리
 
 from fastapi import APIRouter, HTTPException
-from ....schemas.translation import TranslationRequest, TranslationResponse, BatchTranslationRequest, BatchTranslationResponse, HealthResponse
-from ....services.translation_service import TranslationService
+# from ....schemas.translation import TranslationRequest, TranslationResponse, BatchTranslationRequest, BatchTranslationResponse, HealthResponse
+# @@@ 모듈 방식 실행을 할 경우 .... 상대경로 import 대신 app.으로 변경해도 문제없음
+from app.schemas.translation import TranslationRequest, TranslationResponse, BatchTranslationRequest, BatchTranslationResponse, HealthResponse
+from app.services.translation_service import TranslationService
 
 # API Router는 Mini FastAPI로 app.main.py에서 여러 API를 연결해서 활용
 # /translate 아래의 모든 엔드포인트를 이 파일에 모아 관리

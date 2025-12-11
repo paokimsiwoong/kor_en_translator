@@ -12,8 +12,8 @@
 # @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 
-from ..models.translator import translator
-from ..schemas.translation import TranslationRequest, TranslationResponse, BatchTranslationRequest, BatchTranslationResponse
+from app.ml.translator import translator
+from app.schemas.translation import TranslationRequest, TranslationResponse, BatchTranslationRequest, BatchTranslationResponse
 from typing import Optional
 
 class TranslationService:

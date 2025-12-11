@@ -17,8 +17,13 @@ ko-en-translator/
 │   ├── core/
 │   │   ├── \_\_init__.py
 │   │   └── config.py        # 설정 (경로, device 등)
-│   ├── models/
+│   ├── ml/
 │   │   ├── \_\_init__.py
+│   │   ├── blocks.py        # 모델 layer 정의
+│   │   ├── embeddings.py    # 토큰 임베딩 정의
+│   │   ├── pe.py            # Positional embedding 정의
+│   │   ├── transformer.py   # Transforemr 모델 정의
+│   │   ├── visualize.py     # 추론 과정 attention score 시각화
 │   │   └── translator.py    # Transformer 로딩 & 추론 래퍼
 │   ├── schemas/
 │   │   ├── \_\_init__.py

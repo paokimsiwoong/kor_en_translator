@@ -1,5 +1,5 @@
 # 모델 경로
-MODEL_PATH: "models/transformer_koren_20251205_210858_latest.pth"
+MODEL_PATH: "models/transformer_koren_20251209_213317_latest.pth"
 
 # 토크나이저
 TOKENIZER_NAME: "KETI-AIR/ke-t5-base"

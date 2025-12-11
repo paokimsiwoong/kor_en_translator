@@ -8,9 +8,9 @@ from transformers import AutoTokenizer
 from typing import List, Tuple
 # typing.List와 Tuple은 함수 매개변수/반환값이 리스트나 튜플일 때 내부 요소의 타입까지 명시할 수 있도록 해준다
 
-from .transformer import Transformer
-from .visualize import visualize
-from ..core.config import settings
+from app.ml.transformer import Transformer
+from app.ml.visualize import visualize
+from app.core.config import settings
 
 
 class TranslatorService:

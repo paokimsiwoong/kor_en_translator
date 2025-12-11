@@ -2,9 +2,9 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-from . import blocks, embeddings, pe
+from app.ml import blocks, embeddings, pe
 
-from ..core.config import settings, WeightTying
+from app.core.config import settings, WeightTying
 
 class Encoder(nn.Module):
     def __init__(self, q_dim, h_dim, head_num, block_num, drop_rate, visualization=False):

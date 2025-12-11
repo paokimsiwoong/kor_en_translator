@@ -1,8 +1,16 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
-from .api.v1.routes import translate
-from .core.config import settings
+from app.api.v1.routes import translate
+from app.core.config import settings
+
+# from app.db.models.user import User
+# @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+from app.db.models import *
+# app/db/models/__init__.py에서 *에 들어갈 테이블 지정
+# @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+from app.db.base import Base
+from app.db.session import engine
 
 app = FastAPI(
     title="Kor-En Translator API",
@@ -13,9 +21,14 @@ app = FastAPI(
 # localhost:8000/docs로 문서 접근 가능
 # localhost:8000/redoc
 
+# Base.metadata 등록되어 있는 모든 테이블 생성
+# @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+# # from app.db.models import *로 Base를 상속한 테이블들이 메모리에 로드될 때 metadata에 등록된다
+# @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+Base.metadata.create_all(bind=engine)
+
 # CORS(Cross-Origin Resource Sharing)
 # 브라우저는 보안상 다른 도메인 간 요청을 기본적으로 차단
-# ==> 프론드엔드에서 백엔드(이 FastAPI 서버)에 요청 시 CORS 에러가 발생한다
 # FastAPI CORS 미들웨어는 서버가 브라우저에게 다른 도메인에서 요청을 받아도 CORS 에러가 발생하지 않도록 설정한다
     # @@@ CORS는 브라우저의 구현 스펙에 포함되는 정책이기 때문에, 브라우저를 통하지 않고 서버 간 통신을 할 때는 이 정책이 적용되지 않는다.
 app.add_middleware(
