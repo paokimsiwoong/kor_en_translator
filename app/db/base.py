@@ -1,4 +1,6 @@
 # app/db/base.py
+# 테이블 파이썬 클래스들이 상속할 Base 클래스 정의
+
 # from sqlalchemy.orm import declarative_base
 
 # Base = declarative_base() # 메타데이터 수집기 생성

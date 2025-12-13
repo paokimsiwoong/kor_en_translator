@@ -1,4 +1,6 @@
 # app/db/session.py
+# SQL 종류 지정 및 db 세션 생성 함수 정의
+
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 

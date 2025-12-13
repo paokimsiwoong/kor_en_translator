@@ -12,6 +12,8 @@
 
 
 # app/db/models/user.py (2.0 Mapped 버전)
+# DB안의 users 테이블에 대응하는 파이썬 클래스 정의
+
 from sqlalchemy import String
 from sqlalchemy.orm import Mapped, mapped_column
 # @@@ Mapped, mapped_column를 사용하면

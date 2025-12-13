@@ -58,6 +58,11 @@ class Settings:
     BATCH_SIZE: int = int(_cfg.get("BATCH_SIZE", 1))
 
 
+    SECRET_KEY: str = _cfg.get("SECRET_KEY", "use openssl rand -base64 64 to create a key")
+    ALGORITHM: str = _cfg.get("ALGORITHM", "HS256")
+    ACCESS_TOKEN_EXPIRE_MINUTES: int = _cfg.get("ACCESS_TOKEN_EXPIRE_MINUTES", 30)
+
+
 settings = Settings()
 
 
