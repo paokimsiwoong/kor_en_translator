@@ -34,6 +34,7 @@ def get_db():
     db = SessionLocal() # 새로운 세션 생성
     try:
         yield db # FastAPI에 세션 전달 + 실행 정지(함수 실행 중 유지)
+        
     # yield 다음의 코드들은 response 생성 후(또는 get_db가 dependecy인 path operation이 종료 된 후) 
     # FastAPI가 generator를 소모(또는 close)해서 실행이 된다
     finally:

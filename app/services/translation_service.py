@@ -19,24 +19,24 @@ from typing import Optional
 class TranslationService:
     # 단일 문장 번역  
     @staticmethod
-    def translate_ko_to_en(request: TranslationRequest) -> TranslationResponse:
+    def translate_ko_to_en(request: TranslationRequest, user_name="test") -> TranslationResponse:
         try:
             if not request.text.strip():
                 raise ValueError("Text cannot be empty")
             
-            result = translator.translate([request.text], request.max_length, viz=request.viz, user_name="test")
+            result = translator.translate([request.text], request.max_length, viz=request.viz, user_name=user_name)
             return TranslationResponse(original=request.text, translation=result[0] if len(result) != 0 else "")
         except Exception as e:
             raise ValueError(f"Translation failed: {str(e)}")
 
     # 복수 문장 번역 
     @staticmethod
-    def batch_translate_ko_to_en(request: BatchTranslationRequest) -> BatchTranslationResponse:
+    def batch_translate_ko_to_en(request: BatchTranslationRequest, user_name="test") -> BatchTranslationResponse:
         try:
             # if not request.texts.strip():
             #     raise ValueError("Text cannot be empty")
             
-            results = translator.translate(request.texts, request.max_length, viz=request.viz, user_name="test")
+            results = translator.translate(request.texts, request.max_length, viz=request.viz, user_name=user_name)
             return BatchTranslationResponse(original=request.texts, translation=results)
         except Exception as e:
             raise ValueError(f"Translation failed: {str(e)}")

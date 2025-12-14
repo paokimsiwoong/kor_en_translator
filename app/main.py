@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
-from app.api.v1.routes import translate
+from app.api.v1.routes import translate, auth, users
 from app.core.config import settings
 
 # from app.db.models.user import User
@@ -48,6 +48,8 @@ app.add_middleware(
 # API Router는 Mini FastAPI로 app.main.py에서 여러 API를 연결해서 활용
 # 라우터 등록
 app.include_router(translate.router, prefix="/api/v1")
+app.include_router(auth.router, prefix="/api/v1")
+app.include_router(users.router, prefix="/api/v1")
 
 @app.get("/")
 async def root():
