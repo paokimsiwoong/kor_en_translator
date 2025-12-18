@@ -26,7 +26,7 @@ class TranslationRequest(BaseModel):
     # 지정한 길이 범위를 벗어나면 422 에러
 
     # 추론 결과 문장의 최대 길이 설정
-    max_length: Optional[int] = 128
+    max_length: Optional[int] = 512
     # max_length: int | None = 128  # Optional[int]과 동일
 
     # attention score 시각화 여부
@@ -42,7 +42,7 @@ class TranslationResponse(BaseModel):
 class BatchTranslationRequest(BaseModel):
     # text: str = Field(..., min_length=1, max_length=500)
     texts: List[str] = Field(..., min_length=1)
-    max_length: Optional[int] = 128 # int 또는 None
+    max_length: Optional[int] = 512 # int 또는 None
     # max_length: int | None = 128  # Optional[int]과 동일
 
     viz: Optional[bool] = False

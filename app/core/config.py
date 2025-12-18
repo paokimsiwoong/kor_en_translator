@@ -59,6 +59,7 @@ class Settings:
 
 
     SECRET_KEY: str = _cfg.get("SECRET_KEY", "use openssl rand -base64 64 to create a key")
+    # openssl rand -hex 32 또는 openssl rand -base64 64 로 시크릿 키 랜덤 생성
     ALGORITHM: str = _cfg.get("ALGORITHM", "HS256")
     ACCESS_TOKEN_EXPIRE_MINUTES: int = _cfg.get("ACCESS_TOKEN_EXPIRE_MINUTES", 30)
 

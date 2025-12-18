@@ -23,7 +23,7 @@ router = APIRouter(prefix="/translate", tags=["translation"])
 async def translate_text(
     request: TranslationRequest,
     current_user: CurrentUser, # 토큰 필수
-    db: DBDep,
+    # db: DBDep,
 ):
     """한국어를 영어로 번역합니다"""
     try:
@@ -35,20 +35,24 @@ async def translate_text(
     except Exception:
         raise HTTPException(status_code=500, detail="Internal server error")
     
-@router.post("/old", response_model=TranslationResponse) # 이 라우터의 기본 경로는 단일 문장 번역
-async def old_translate_text(request: TranslationRequest):
-    """한국어를 영어로 번역합니다"""
-    try:
-        return TranslationService.translate_ko_to_en(request)
-    except ValueError as e:
-        raise HTTPException(status_code=400, detail=str(e))
-        # FastAPI의 HTTPException은 Error Response를 더 쉽게 보낼 수 있도록 하는 Class로
-        # 사용하면 자동으로 JSON 응답 + 적절한 HTTP 상태코드 반환
-    except Exception:
-        raise HTTPException(status_code=500, detail="Internal server error")
+# @router.post("/old", response_model=TranslationResponse) # 이 라우터의 기본 경로는 단일 문장 번역
+# async def old_translate_text(request: TranslationRequest):
+#     """한국어를 영어로 번역합니다"""
+#     try:
+#         return TranslationService.translate_ko_to_en(request)
+#     except ValueError as e:
+#         raise HTTPException(status_code=400, detail=str(e))
+#         # FastAPI의 HTTPException은 Error Response를 더 쉽게 보낼 수 있도록 하는 Class로
+#         # 사용하면 자동으로 JSON 응답 + 적절한 HTTP 상태코드 반환
+#     except Exception:
+#         raise HTTPException(status_code=500, detail="Internal server error")
     
 @router.post("/batch", response_model=BatchTranslationResponse) # /batch는 복수 문장 번역
-async def batch_translate_text(request: BatchTranslationRequest):
+async def batch_translate_text(
+    request: BatchTranslationRequest,
+    current_user: CurrentUser, # 토큰 필수
+    # db: DBDep,
+):
     """한국어 문장들을 영어로 번역합니다"""
     try:
         return TranslationService.batch_translate_ko_to_en(request)
@@ -58,6 +62,18 @@ async def batch_translate_text(request: BatchTranslationRequest):
         # 사용하면 자동으로 JSON 응답 + 적절한 HTTP 상태코드 반환
     except Exception:
         raise HTTPException(status_code=500, detail="Internal server error")
+    
+# @router.post("/old/batch", response_model=BatchTranslationResponse) # /batch는 복수 문장 번역
+# async def batch_translate_text(request: BatchTranslationRequest):
+#     """한국어 문장들을 영어로 번역합니다"""
+#     try:
+#         return TranslationService.batch_translate_ko_to_en(request)
+#     except ValueError as e:
+#         raise HTTPException(status_code=400, detail=str(e))
+#         # FastAPI의 HTTPException은 Error Response를 더 쉽게 보낼 수 있도록 하는 Class로
+#         # 사용하면 자동으로 JSON 응답 + 적절한 HTTP 상태코드 반환
+#     except Exception:
+#         raise HTTPException(status_code=500, detail="Internal server error")
 
 @router.get("/health", response_model=HealthResponse)
 async def health_check():

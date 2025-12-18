@@ -15,7 +15,9 @@ from app.core.security import decode_access_token
 from app.db.session import get_db
 from app.db.models.user import User
 
-from jose import JWTError
+# from jose import JWTError
+# @@@ PyJWT 사용으로 변경
+from jwt.exceptions import InvalidTokenError
 
 # 여러 엔드포인트에서 반복되는 의존성 타입들을 Annotated를 이용해 타입 별칭 정의해서 재사용 가능하게 하기
 
@@ -76,7 +78,7 @@ def get_current_user(
         # 저장된 user id가 없는 경우 예외 처리
         if user_id is None:
             raise credentials_exception
-    except JWTError:
+    except InvalidTokenError:
         # 토큰 검증에 실패한 경우 예외 처리
         raise credentials_exception
     except Exception:
