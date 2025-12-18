@@ -1,4 +1,6 @@
 # app/core/security.py
+# 비밀번호 해시 생성/검증과 JWT 생성/검증
+
 from datetime import datetime, timedelta, timezone
 from typing import Optional
 
