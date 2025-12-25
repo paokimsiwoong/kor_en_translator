@@ -24,6 +24,11 @@ def read_users_me(
 ):
     # current_user는 이미 인증된 User 모델 인스턴스
     return current_user
+    # current_user는 db/models/user.py의 User 클래스라 
+    # hashed_password 필드가 있지만
+    # response_model=UserOut이므로 pydantic이 알아서
+    # UserOut에는 없는 hashed_password 필드를 제외한다
+    # # 따라서 클라이언트에 hash값이 노출되지 않도록 한다
 # @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 # @@@ GET /users/me 요청 흐름 @@@
 # 헤더로 Authorization: Bearer <JWT-토큰>를 담은 
