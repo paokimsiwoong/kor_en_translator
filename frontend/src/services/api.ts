@@ -35,6 +35,25 @@ export interface User {
 // // // /users/me는 hashed_password가 제외된 UserOut을 반환해 
 // // // 클라이언트에 hash 값이 노출되지 않도록 하고 있으므로 여기 User 인터페이스도 hash 관련 필드가 없다
 
+export interface TranslateRequest {
+  text: string;
+  max_length?: number;
+  viz?: boolean;
+}
+
+export interface TranslateBatchRequest {
+  texts: string[];
+  max_length?: number;
+  viz?: boolean;
+}
+
+export interface TranslateResponse {
+  original: string | string[];
+  translation: string | string[];
+  status: 'success';
+}
+
+
 // Axios 인스턴스를 생성해 api에 할당
 const api = axios.create({
   // baseURL: 'http://localhost:8000/api/v1', 

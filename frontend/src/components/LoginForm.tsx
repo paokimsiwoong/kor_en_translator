@@ -6,7 +6,7 @@
 
 import { useState } from 'react';
 // useState
-// // eact 상태 훅 -> form 데이터 관리
+// // React 상태 훅 -> form 데이터 관리
 import { useAuth } from '../hooks/useAuth';
 // useAuth 
 // // 로그인 로직(login.mutate) + 상태(isPending, error) 제공
