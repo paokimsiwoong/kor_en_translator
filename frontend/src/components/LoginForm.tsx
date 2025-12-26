@@ -22,6 +22,9 @@ import type { LoginForm } from '../services/api';
 // LoginForm
 // TypeScript Generic(<>) 설정에 사용
 
+import { type AxiosError } from 'axios';
+// @@@ ESLint가 as any를 사용 금지 -> error as any 부분 수정에 AxiosError 사용
+
 // LoginForm 컴포넌트 선언
 export default function LoginForm() {
   // const [form, setForm] = useState({ username: '', password: '' });
@@ -31,12 +34,19 @@ export default function LoginForm() {
   // Destructuring(구조 분해 할당 - 여러 필드를 가진 객체를 분해해 필드들 여러개로 할당) : useAuth의 반환값 중 필요한 것들만 받아서 사용하고 나머지 무시
   // login.mutate()로 요청, isPending으로 로딩 상태 받음
 
-  // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+  // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
   // 아이디, 비밀번호 입력 부분의 input 블록 onChange 중복 코드 DRY 위반 해결
-  // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+  // @@@ 여기서 e.target.name, e.target.value로 사용되는 블록의 name과 value 속성을 사용하므로
+  // @@@ onChange={handleChange} 를 사용하기 위해서는
+  // @@@ 반드시 name, value 속성이 있어야 한다
+  // @@@ @@@ name="username" 으로 name 속성이 없을 경우 e.target.name이 undefined가 되어
+  // @@@ @@@ 입력된 value가 username에 저장되지 않고 undefined에 저장된다
+  // @@@ @@@ @@@ { username: '', password: '' }이 { username: '', password: '', undefined: 'a' } 와 같이 변경
+  // @@@ @@@ 따라서 form의 username 자체는 변화가 없으므로 화면에 변화가 없다
+  // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -58,11 +68,14 @@ export default function LoginForm() {
       <form onSubmit={handleSubmit} className="space-y-6">
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">
-            이메일 또는 사용자명
+            이메일
           </label>
           <div className="relative">
             <Mail className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
             <input
+              // @@@ onChange={handleChange} 를 사용하기 위해서
+              // @@@ 반드시 name, value 속성이 있어야 한다
+              name="username"
               type="text"
               value={form.username}
               // onChange={(e) => setForm({ ...form, username: e.target.value })}
@@ -80,6 +93,9 @@ export default function LoginForm() {
           <div className="relative">
             <Lock className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
             <input
+              // @@@ onChange={handleChange} 를 사용하기 위해서
+              // @@@ 반드시 name, value 속성이 있어야 한다
+              name="password"
               type="password"
               value={form.password}
               // onChange={(e) => setForm({ ...form, password: e.target.value })}
@@ -119,7 +135,8 @@ export default function LoginForm() {
       {isError && error && (
         <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-lg">
           <p className="text-sm text-red-800">
-            {(error as any)?.response?.data?.detail || error.message || '로그인에 실패했습니다.'}
+            {/* {(error as any)?.response?.data?.detail || error.message || '로그인에 실패했습니다.'} */}
+            {(error as AxiosError<{ detail: string }>)?.response?.data?.detail || error.message || '로그인에 실패했습니다.'}
           </p>
         </div>
       )}

@@ -1,7 +1,10 @@
 // api.ts
 // axios 인스턴스를 생성하고, 공통 HTTP 요청 로직을 여기에 중앙화
 
-import axios from 'axios';
+// import axios from 'axios';
+// @@@ ESLint가 as any를 사용 금지
+import axios, { type AxiosInstance, type InternalAxiosRequestConfig } from 'axios';
+// // @@@ addTokenInterceptor의 as any 두부분 수정에 사용
 
 // 타입 정의
 // export되어 있어서 다른 파일에서 import type { LoginForm } from '../services/api'로 타입만 가져올 수 있다
@@ -53,10 +56,21 @@ export const authApi = axios.create({
 
 
 // 공통 토큰 인터셉터
-const addTokenInterceptor = (instance: any) => {
-  instance.interceptors.request.use((config: any) => {
+// const addTokenInterceptor = (instance: any) => {
+//   instance.interceptors.request.use((config: any) => {
+// // @@@ ESLint가 as any를 사용 금지
+const addTokenInterceptor = (instance: AxiosInstance) => {
+  instance.interceptors.request.use((config: InternalAxiosRequestConfig) => {
     const token = localStorage.getItem('access_token');
-    if (token) config.headers.Authorization = `Bearer ${token}`;
+    if (token) {
+      // config.headers = {
+      //   ...config.headers,
+      //   Authorization: `Bearer ${token}`,
+      // }; 
+      // // @@@ config.headers는 단순 객체가 아니라 AxiosHeaders 인스턴스라서 
+      // // @@@ 직접 객체 할당이 안 되고 .set 메서드 사용 필수
+      config.headers.set('Authorization', `Bearer ${token}`);
+    }
     return config;
   });
 };

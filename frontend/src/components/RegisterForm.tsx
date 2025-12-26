@@ -17,6 +17,9 @@ import type { RegisterForm } from '../services/api';
 // RegisterForm
 // TypeScript Generic(<>) 설정에 사용
 
+import { type AxiosError } from 'axios';
+// @@@ ESLint가 as any를 사용 금지 -> error as any 부분 수정에 AxiosError 사용
+
 // RegisterForm 컴포넌트 선언
 export default function RegisterForm() {
   const [form, setForm] = useState<RegisterForm>({ // <RegisterForm>로 이 상태는 RegisterForm 타입이라고 명시
@@ -46,6 +49,15 @@ export default function RegisterForm() {
   // 함수형 업데이트 (prev) => ...
   // // prev = 이전 form 상태
   // // ...prev 는 prev 값 복사
+  // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+  // @@@ 여기서 e.target.name, e.target.value로 사용되는 블록의 name과 value 속성을 사용하므로
+  // @@@ onChange={handleChange} 를 사용하기 위해서는
+  // @@@ 반드시 name, value 속성이 있어야 한다
+  // @@@ @@@ name="username" 으로 name 속성이 없을 경우 e.target.name이 undefined가 되어
+  // @@@ @@@ 입력된 value가 username에 저장되지 않고 undefined에 저장된다
+  // @@@ @@@ @@@ { username: '', password: '' }이 { username: '', password: '', undefined: 'a' } 와 같이 변경
+  // @@@ @@@ 따라서 form의 username 자체는 변화가 없으므로 화면에 변화가 없다
+  // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -72,22 +84,6 @@ export default function RegisterForm() {
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-6">
-        {/* 사용자명 */}
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">사용자명</label>
-          <div className="relative">
-            <User className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
-            <input
-              name="username"
-              type="text"
-              value={form.username}
-              onChange={handleChange}
-              className="w-full pl-11 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              required
-            />
-          </div>
-        </div>
-
         {/* 이메일 */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">이메일</label>
@@ -97,6 +93,22 @@ export default function RegisterForm() {
               name="email"
               type="email"
               value={form.email}
+              onChange={handleChange}
+              className="w-full pl-11 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              required
+            />
+          </div>
+        </div>
+
+        {/* 사용자명 */}
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-2">사용자명</label>
+          <div className="relative">
+            <User className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
+            <input
+              name="username"
+              type="text"
+              value={form.username}
               onChange={handleChange}
               className="w-full pl-11 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               required
@@ -139,7 +151,8 @@ export default function RegisterForm() {
       {isError && error && (  // useAuth 훅에서 가져옴
         <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-lg">
           <p className="text-sm text-red-800">
-            {(error as any)?.response?.data?.detail || '회원가입에 실패했습니다.'}
+            {/* {(error as any)?.response?.data?.detail || error.message || '로그인에 실패했습니다.'} */}
+            {(error as AxiosError<{ detail: string }>)?.response?.data?.detail || error.message || '로그인에 실패했습니다.'}
           </p>
         </div>
       )}

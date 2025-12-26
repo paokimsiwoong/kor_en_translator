@@ -72,11 +72,18 @@ export function useAuth() {
       
       // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
       // @@@ form 그대로 사용 시 422 에러 발생
-      const params = new URLSearchParams(form as any);
+      // const params = new URLSearchParams(form as any);
       // // { username: "test", password: "123" } 형태의 dict로 되어 있는 form을 
       // // application/x-www-form-urlencoded 형식 요구사항에 맞게
       // // "username=test&password=123" 와 같은 형태로 변환
       // // // ??? as any 이유: LoginForm의 value가 string | undefined일 수 있어서 TypeScript가 까다롭게 체크 ???
+      // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+      // @@@ ESLint가 as any를 사용 금지
+      const params = new URLSearchParams({
+        username: form.username,
+        password: form.password,
+      });
+      // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
       
       const { data } = await authApi.post<AuthResponse>('/auth/login', params);
       // @@@ api 기본 헤더 application/json를 사용하면 422 에러 발생
