@@ -1,3 +1,5 @@
+// ESLint 설정 파일 (코드 스타일/버그 검사 도구)
+
 import js from "@eslint/js";
 import globals from "globals";
 import tseslint from "typescript-eslint";
