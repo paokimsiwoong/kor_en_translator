@@ -12,12 +12,20 @@ import api, { type TranslateRequest, type TranslateBatchRequest, type TranslateR
 
 
 export const translateText = async (data: TranslateRequest): Promise<TranslateResponse> => {
-  const response = await api.post('/translate', data);
+  const response = await api.post('/translate', {
+    text: data.text,
+    max_length: data.max_length ?? 512,  // ?? 512 없으면 해당 필드가 undefined -> backend 에러를 막기 위해 512 변환
+    viz: data.viz ?? false,
+  });
   return response.data;
 };
 
 export const translateBatch = async (data: TranslateBatchRequest): Promise<TranslateResponse> => {
-  const response = await api.post('/translate/batch', data);
+  const response = await api.post('/translate/batch', {
+    texts: data.texts,
+    max_length: data.max_length ?? 512,  // ?? 512 없으면 해당 필드가 undefined -> backend 에러를 막기 위해 512 변환
+    viz: data.viz ?? false,
+  });
   return response.data;
 };
 

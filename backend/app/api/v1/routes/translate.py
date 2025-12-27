@@ -19,12 +19,17 @@ router = APIRouter(prefix="/translate", tags=["translation"])
 
 # decorator의 response_model 인자에 원하는 response body의 형태를 pydantic BaseModel을 상속하는 클래스로 지정하면
 # 함수 반환값을 지정한 클래스 정의에 맞게 변환해주고 동시에 데이터 유효성 검사까지 다 진행해준다.
-@router.post("/", response_model=TranslationResponse) # 이 라우터의 기본 경로는 단일 문장 번역
+@router.post("", response_model=TranslationResponse) # 이 라우터의 기본 경로는 단일 문장 번역
+# @@@ 추가 경로를 "/"로 두면 /api/v1/translate가 아니라 /api/v1/translate/ 경로가 되므로 맨 마지막에 /이 필요 없도록 ""로 설정
 async def translate_text(
     request: TranslationRequest,
     current_user: CurrentUser, # 토큰 필수
     # db: DBDep,
 ):
+    
+    # print(f"요청 데이터: {request}")  # 실제 받은 요청 출력
+    # print(f"사용자: {current_user.username}")
+
     """한국어를 영어로 번역합니다"""
     try:
         return TranslationService.translate_ko_to_en(request, current_user.username)

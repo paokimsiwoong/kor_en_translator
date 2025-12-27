@@ -75,5 +75,5 @@ ko-en-translator/
 - [X] 유저 등록 및 로그인 - 보안
 - [ ] viz True 일 경우 attention score 결과 html 보내기
 - [ ] docker 사용해보기
-- [ ] front 만들기
+- [X] front 만들기
     - [ ] 토큰 만료 기간 표시 및 만료 시 로그인 풀기, 로그인 연장(토큰 재발급) 버튼 추가

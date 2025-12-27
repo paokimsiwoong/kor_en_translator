@@ -61,6 +61,8 @@ def get_current_user(
     db: DBDep,
 ) -> User:
     
+    # print("get_current_user test")
+    
     # 토큰 검증이 실패할 경우의 HTTPException 정의
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
