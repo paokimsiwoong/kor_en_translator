@@ -21,7 +21,21 @@ import { useTranslate } from '../hooks/useTranslate';
 // useTranslate
 // // 번역 기능 제공
 
-import { Loader2, CopyCheck, Plus, Minus } from 'lucide-react';
+import { Loader2, Copy, CopyCheck, Plus, Minus } from 'lucide-react';
+// Loader2
+// // 로딩 스피너 아이콘
+// // 번역 버튼 내부 isPending일 때 표시
+// // animate-spin으로 무한 회전
+// Copy
+// // 복사 버튼
+// CopyCheck
+// // 복사 완료 버튼
+// // 번역 결과 옆 복사 버튼이 눌려 클립보드에 복사 완료 시 표시되는 아이콘
+// Plus
+// // 입력란 추가 버튼
+// // 눌리면 새로운 입력란 추가
+// Minus
+// // 입력란 제거 버튼
 
 export default function Dashboard() {
   const { logout } = useAuth();
@@ -41,39 +55,59 @@ export default function Dashboard() {
   // Dashboard 페이지 첫 방문에만 /users/me API 호출을 하고
   // 이후엔 캐시에 저장된 결과 사용
 
-  // 번역 기능 관련
+  // 번역 기능 관련 변수들 
+  // @@@ React state 및 여기서 사용되는 훅에서 반환되는 값들을 할당
   // const [translateText, setTranslateText] = useState('');
   const [translateTexts, setTranslateTexts] = useState<string[]>(['']);  // 배치모드를 위해 배열로 변경
+  // @@@ state 옆의 함수들은 해당 state 업데이트 함수
+  // @@@ @@@ useState는 생성된 state와 그 state의 setter(업데이트함수)를 반환한다
+  // @@@ @@@ 반환된 state와 setter의 이름을 각각 translateTexts, setTranslateTexts로 정의
   // const [result, setResult] = useState('');
   const [result, setResult] = useState<string[]>([]);  // 배치모드를 위해 배열로 변경
   // @@@ 단일 문장 번역일 때는 배열의 0번 인덱스만 사용하도록 코드를 변경한다
   const [useBatch, setUseBatch] = useState(false);
   const { singleTranslate, singlePending, singleError, batchTranslate, batchPending, batchError } = useTranslate();
+  // useTranslate 훅의 반환값들 할당
 
-  // 텍스트 추가/제거
+  // 복사 완료 여부 확인하는 state와 업데이트 함수
+  const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
+  // // 복사 버튼(Copy 아이콘)들을 렌더링할 떄 여기에 저장된 index에 해당하는 버튼은 복사 완료 버튼(CopyCheck)으로 변경
+
+  // 텍스트 입력란 추가 버튼이 눌릴 시 실행되는 함수
   const addTextInput = () => {
     if (!useBatch) return;  // 배치 모드가 아니면 추가 불가
     setTranslateTexts(prev => [...prev, '']);
+    // translateTexts 배열에 '' 추가해 길이 1 증가
+    // // 입력창 렌더링 시에 배열 길이에 맞춰서 렌더링할 입력란 개수를 정한다
   };
-  // // 새 문장 입력창이 추가되면 translateTexts 배열에 '' 추가
 
+  // 텍스트 입력란 제거 버튼이 눌릴 시 실행되는 함수
   const removeTextInput = (index: number) => {
     if (translateTexts.length > 1) {
       const newTexts = translateTexts.filter((_, i) => i !== index);
       const newResults = result.filter((_, i) => i !== index);
       setTranslateTexts(newTexts);
       setResult(newResults);
+      // 각 배열 마지막 인덱스를 필터링해 배열 길이 1 감소
     }
   };
-  // // 문장 입력창이 하나 제거되면 translateTexts 배열 마지막 제거
 
-  // 개별 텍스트 변경
+  // 개별 텍스트 입력란 텍스트 변경 감지 시 실행되는 함수
   const updateText = (index: number, value: string) => {
+    // 내용이 변경된 입력창의 index와 변경된 내용을 받아 갱신하는 함수
     const newTexts = [...translateTexts];
     newTexts[index] = value;
     setTranslateTexts(newTexts);
+    // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+    // 단순히 translateTexts[index] = value;로 기존 state array 내부 element 값을 변경하면
+    // React가 값(상태) 변경을 감지하지 못해 새로 렌더링하지 않는다 -> 화면에 값 변경이 반영되지 않는다
+    // @@@ React는 === (참조 비교)로 상태 변경 감지
+    // @@@ @@@ translateTexts[index] = value; setTranslateTexts(translateTexts);
+    // @@@ @@@ 이렇게 하면 oldArray === newArray 결과가 true라서 react는 화면을 새로 렌더링하지 않는다
+    // @@@ newTexts = [...translateTexts]; 는 내부 값이 같지만 주소가 다른 새 어레이를 생성하므로
+    // @@@ setTranslateTexts(newTexts);를 하면 React가 변경을 감지하고 화면을 새로 렌더링한다.
+    // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
   };
-  // // 개별 문장 입력창 변화 시 translateTexts 배열 해당 인덱스 문장 값 변경
 
   const handleTranslate = async () => {
     // if (!translateText.trim()) return;
@@ -90,23 +124,31 @@ export default function Dashboard() {
 
     try {
       let response: TranslateResponse;
+      // let : 블록 스코프 변수 선언 (초기화 x -> undefined 상태)
+      // // const도 블록 스코프 변수이지만 const와 다르게 재할당이 가능
+      // // if else 에서 조건에 따라 재할당이 필요하므로 let
       
-      if (useBatch) {
-        // 배치 모드
+      
+      if (useBatch) { // 배치 모드
+        // /translate/batch에 요청하고 받은 응답을 response에 할당
         response = await batchTranslate({
           texts,  
           max_length: 512,
           viz: false,
         } as TranslateBatchRequest);
+
+        // 응답의 translation 필드를 result state에 입력
         setResult(response.translation as string[]);
-      } else {
-        // 단일 모드
+      } else { // 단일 모드
+        // @@@ 단일 모드인 경우는 배열인 texts의 0번 인덱스만 firstText에 할당해 요청에 사용
         const firstText = texts[0];
+        // /translate에 요청하고 받은 응답을 response에 할당
         response = await singleTranslate({
           text: firstText,
           max_length: 512,
           viz: false,
         } as TranslateRequest);
+        // 응답의 translation 필드를 result state에 입력
         setResult([response.translation as string]);
       }
     } catch (error) {
@@ -118,8 +160,17 @@ export default function Dashboard() {
   // const handleCopy = () => {
   //   navigator.clipboard.writeText(result);
   // };
-  const handleCopy = (index: number) => {
-    navigator.clipboard.writeText(result[index] || '');
+  // const handleCopy = (index: number) => {
+  //   navigator.clipboard.writeText(result[index] || '');
+  // };
+  const handleCopy = async (index: number) => {
+    try {
+      await navigator.clipboard.writeText(result[index] || '');
+      setCopiedIndex(index);  // 복사 성공 -> 인덱스 저장 -> 해당 인덱스 버튼은 복사(Copy) 버튼 대신 복사완료(CopyCheck) 버튼으로 변경
+      setTimeout(() => setCopiedIndex(null), 5000);  // 일정시간 후 원래대로
+    } catch (error) {
+      console.error('복사 실패:', error);
+    }
   };
 
   const isPending = singlePending || batchPending;
@@ -129,6 +180,7 @@ export default function Dashboard() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-8">
       <div className="max-w-2xl mx-auto p-6 bg-white rounded-xl shadow-lg">
+        {/* 헤더 + 로그아웃 버튼 영역 */}
         <div className="flex items-center justify-between mb-4">
           <h1 className="text-2xl font-bold text-gray-900">대시보드</h1>
           <button onClick={logout} className="text-sm text-red-600 hover:underline">
@@ -136,6 +188,7 @@ export default function Dashboard() {
           </button>
         </div>
 
+        {/* 사용자 정보 표시 영역 */}
         <div className="space-y-2">
           <p className="text-gray-700">
             안녕하세요, <span className="font-semibold">{user?.username}</span>님!
@@ -154,9 +207,12 @@ export default function Dashboard() {
             한영 번역기
           </h2>
           
+          {/* 섹션에서 h2를 제외한 부분 */}
           <div className="space-y-6">
-            {/* 배치 모드 토글 */}
+
+            {/* 배치 모드 토글, 추가/제거 버튼 영역 */}
             <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-xl">
+              {/* 배치 모드 토글 */}
               <label className="flex items-center gap-2 text-sm font-semibold text-gray-700 cursor-pointer select-none flex-1">
                 <input
                   type="checkbox"
@@ -164,7 +220,7 @@ export default function Dashboard() {
                   onChange={(e) => {
                     setUseBatch(e.target.checked);
                     if (!e.target.checked && translateTexts.length > 1) {
-                      // 배치 모드 끄면 첫 번째만 남김
+                      // 배치 모드 끄면 입력란, 결과란 첫 번째만 남김
                       setTranslateTexts([translateTexts[0]]);
                       setResult(result.length > 0 ? [result[0]] : []);
                     }
@@ -173,13 +229,15 @@ export default function Dashboard() {
                   disabled={isPending}
                 />
                 <span>
-                  배치 모드
+                  배치 번역 모드
                   {!useBatch && translateTexts.length > 1 && (
-                    <span className="text-xs text-orange-500 ml-1">(단일 모드로 변경)</span>
+                    <span className="text-xs text-orange-500 ml-1">(단일 문장 번역 모드로 변경)</span>
                   )}
                 </span>
               </label>
+              {/* 문장 입력란 추가/제거 버튼 */}
               <div className="flex gap-1">
+                {/* 추가 버튼 */}
                 <button
                   onClick={addTextInput}
                   disabled={!useBatch || isPending}
@@ -188,8 +246,11 @@ export default function Dashboard() {
                 >
                   <Plus className="w-4 h-4 group-disabled:opacity-30" />
                 </button>
+
+                {/* 제거 버튼(입력란이 2개 이상일때만 조건부 표시), 배열 마지막 원소 제거 */}
                 {translateTexts.length > 1 && (
                   <button
+                    // 클릭하면 배열 마지막 element index를 removeTextInput 함수에 입력해 제거
                     onClick={() => removeTextInput(translateTexts.length - 1)}
                     disabled={isPending}
                     className="p-2 text-red-600 hover:bg-red-50 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
@@ -203,6 +264,7 @@ export default function Dashboard() {
 
             {/* 입력 영역들 */}
             <div className="space-y-4 max-h-96 overflow-y-auto">
+              {/* translateTexts 배열 길이에 맞춰서 입력란 복수 생성 */}
               {translateTexts.map((text, index) => (
                 <div key={index} className="relative group">
                   <label className="block text-xs font-medium text-gray-500 mb-1">
@@ -215,6 +277,7 @@ export default function Dashboard() {
                     className="w-full h-24 p-4 border border-gray-300 rounded-xl resize-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
                     disabled={isPending}
                   />
+                  {/* 입력란 2개 이상일 때, 각 입력란 별 제거 버튼 생성 */}
                   {translateTexts.length > 1 && (
                     <button
                       onClick={() => removeTextInput(index)}
@@ -239,10 +302,11 @@ export default function Dashboard() {
                 {isPending ? (
                   <>
                     <Loader2 className="w-5 h-5 animate-spin" />
+                    {/* animate-spin으로 무한 회전 효과 */}
                     번역 중...
                   </>
                 ) : (
-                  `번역하기 (${translateTexts.filter(t => t.trim()).length}개)`
+                  `(${translateTexts.filter(t => t.trim()).length}개) 문장 번역하기`
                 )}
               </button>
             </div>
@@ -254,16 +318,24 @@ export default function Dashboard() {
                   번역 결과 ({result.length}개)
                 </h3>
                 <div className="space-y-3">
+                  {/* result 배열 길이에 맞춰서 결과란 복수 생성 */}
                   {result.map((res, index) => (
                     <div key={index} className="p-4 bg-gradient-to-r from-green-50 to-blue-50 border rounded-xl">
                       <div className="flex items-center justify-between mb-2">
                         <span className="text-sm font-medium text-gray-600">결과 {index + 1}</span>
+                        {/* 결과 복사 버튼 */}
                         <button
                           onClick={() => handleCopy(index)}
-                          className="p-1.5 text-green-600 hover:bg-green-100 rounded-lg transition-colors"
-                          title="복사"
+                          disabled={isPending}
+                          className="p-1.5 text-gray-500 hover:text-blue-600 hover:bg-blue-50 disabled:opacity-50 rounded-lg transition-all duration-200"
+                          title="결과 복사"
                         >
-                          <CopyCheck className="w-4 h-4" />
+                          {/* 복사 버튼 index가 가장 최근에 눌린 버튼이면 복사 완료 아이콘, 아니면 복사 아이콘 렌더링 */}
+                          {copiedIndex === index ? (
+                            <CopyCheck className="w-4 h-4 text-green-600 animate-pulse" />  // ✅ 복사 완료!
+                          ) : (
+                            <Copy className="w-4 h-4" />  // ✅ 복사 전!
+                          )}
                         </button>
                       </div>
                       <p className="whitespace-pre-wrap text-gray-900 leading-relaxed text-sm">{res}</p>

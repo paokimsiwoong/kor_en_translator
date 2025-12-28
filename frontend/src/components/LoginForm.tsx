@@ -11,8 +11,12 @@ import { useAuth } from '../hooks/useAuth';
 // useAuth 
 // // 로그인 로직(login.mutate) + 상태(isPending, error) 제공
 import { Mail, Lock, Loader2 } from 'lucide-react';
-// 아이콘 컴포넌트
+// Mail, Lock
+// // 아이콘 컴포넌트
 // // 입력란 옆에 표시
+// Loader2 
+// // 로딩 스피너
+// // isPending일 때 표시
 
 import { Link } from 'react-router-dom';
 // Link

@@ -151,8 +151,8 @@ export default function RegisterForm() {
       {isError && error && (  // useAuth 훅에서 가져옴
         <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-lg">
           <p className="text-sm text-red-800">
-            {/* {(error as any)?.response?.data?.detail || error.message || '로그인에 실패했습니다.'} */}
-            {(error as AxiosError<{ detail: string }>)?.response?.data?.detail || error.message || '로그인에 실패했습니다.'}
+            {/* {(error as any)?.response?.data?.detail || error.message || '회원가입에 실패했습니다.'} */}
+            {(error as AxiosError<{ detail: string }>)?.response?.data?.detail || error.message || '회원가입에 실패했습니다.'}
           </p>
         </div>
       )}
