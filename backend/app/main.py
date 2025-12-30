@@ -1,4 +1,11 @@
-from fastapi import FastAPI
+# from fastapi import FastAPI
+# @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+from fastapi import FastAPI, Request, status
+from fastapi.exceptions import RequestValidationError
+from fastapi.responses import JSONResponse
+# 422(pydantic validation error) - RequestValidationError
+# 처리하는 핸들러 설정에 사용
+# @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 from app.api.v1.routes import translate, auth, users
@@ -20,6 +27,39 @@ app = FastAPI(
 # FastAPI는 자동으로 문서 생성
 # localhost:8000/docs로 문서 접근 가능
 # localhost:8000/redoc
+
+# RequestValidationError 전역 핸들러
+@app.exception_handler(RequestValidationError)
+async def validation_exception_handler(request: Request, exc: RequestValidationError):
+    errors = []
+    
+    for error in exc.errors():
+        field = error['loc'][0] if error['loc'] else '입력값'
+        message = error['msg']
+        
+        # 커스텀 메시지 매핑
+        if 'email' in str(error['loc']):
+            message = '올바른 이메일 주소를 입력해주세요 (예: test@gmail.com)'
+        
+        # @@@ UserCreate에서 Field를 이용해 길이를 제한하고
+        # @@@ field_validator로 특정 검증 로직을 추가한 경우 여기서 해당 에러 메시지 설정 가능
+        # elif 'password' in str(error['loc']):
+        #     message = '비밀번호는 8자 이상 입력해주세요'
+        # elif 'username' in str(error['loc']):
+        #     message = '사용자명은 3~50자 영문/숫자만 가능합니다'
+        
+        errors.append({
+            'field': field,
+            'message': message
+        })
+    
+    return JSONResponse(
+        status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+        content={
+            'detail': errors[0]['message'] if errors else '입력 오류',  # 첫 번째 에러만
+            'errors': errors  # 전체 에러 리스트 (선택)
+        }
+    )
 
 # Base.metadata 등록되어 있는 모든 테이블 생성
 # @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
