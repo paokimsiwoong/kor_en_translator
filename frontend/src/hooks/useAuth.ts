@@ -28,9 +28,22 @@ import { useNavigate } from 'react-router-dom';
 // // 코드에서 navigate('/dashboard')처럼 호출해서 프로그래밍적으로 페이지 이동을 할 수 있게 해 준다
 
 
-interface AuthResponse {
+// @@@ login과 register의 backend 응답의 필드들이 다르므로 분리
+// interface AuthResponse {
+//   access_token: string;
+// }
+ 
+interface LoginResponse {
   access_token: string;
+  token_type: string;
 }
+
+interface RegisterResponse {
+  id: number;
+  email: string;
+  username: string;
+}
+
 
 
 // useAuth 
@@ -85,7 +98,7 @@ export function useAuth() {
       });
       // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
       
-      const { data } = await authApi.post<AuthResponse>('/auth/login', params);
+      const { data } = await authApi.post<LoginResponse>('/auth/login', params);
       // @@@ api 기본 헤더 application/json를 사용하면 422 에러 발생
       // @@@ @@@ application/x-www-form-urlencoded를 사용하기 위해 authApi 사용
       // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
@@ -114,7 +127,7 @@ export function useAuth() {
   // register mutation 정의
   const register = useMutation({
     mutationFn: async (form: RegisterForm) => {
-      const { data } = await api.post<AuthResponse>('/auth/register', form);
+      const { data } = await api.post<RegisterResponse>('/auth/register', form);
       return data;
     },
     onSuccess: () => {

@@ -62,6 +62,8 @@ const api = axios.create({
   // // ex: api.get('/users/me')  -->  http://localhost:8000/api/v1/users/me
   headers: { 'Content-Type': 'application/json' },
   // 모든 요청의 기본 헤더 설정
+  // validateStatus: (status) => status >= 200 && status < 300, 
+  // 기본값 < 300
 });
 
 
@@ -71,6 +73,7 @@ export const authApi = axios.create({
   // baseURL: 'http://localhost:8000/api/v1',
   baseURL: '/api', // @@@ Vite 프록시 사용 -> vite.config.ts에 저장된 프록시 대상 경로로 변경
   headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+  // validateStatus: (status) => status >= 200 && status < 300,
 });
 
 

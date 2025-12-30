@@ -20,6 +20,40 @@ import type { RegisterForm } from '../services/api';
 import { type AxiosError } from 'axios';
 // @@@ ESLint가 as any를 사용 금지 -> error as any 부분 수정에 AxiosError 사용
 
+// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+// 422(pydantic validation error) 에러의 detail이 400 에러의 detail과 달리 array여서
+// 따로 처리하지 않으면 에러가 발생해 화면 전체 렌더링이 날라간다
+interface FastAPIValidationError {
+  type: string;
+  loc: string[];
+  msg: string;
+  input: any;
+  ctx: Record<string, any>;
+}
+
+interface FastAPIErrorResponse {
+  detail: string | FastAPIValidationError[];
+}
+
+const getErrorMessage = (error: unknown): string => {
+  try {
+    const err = error as AxiosError<FastAPIErrorResponse>;
+    const detail = err.response?.data?.detail;
+    
+    if (Array.isArray(detail)) {
+      return detail
+      .map((item: FastAPIValidationError) => item.msg)
+      .filter(Boolean)
+      .join(', ');
+    }
+    
+    return String(detail || err.message || '회원가입 실패');
+  } catch {
+    return '회원가입 중 오류 발생';
+  }
+};
+// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
 // RegisterForm 컴포넌트 선언
 export default function RegisterForm() {
   const [form, setForm] = useState<RegisterForm>({ // <RegisterForm>로 이 상태는 RegisterForm 타입이라고 명시
@@ -70,7 +104,24 @@ export default function RegisterForm() {
     // // 클라이언트 검증을 지우고 서버에서 검증하도록 변경하는게 React Query 철학에 맞다
     // // // 네트워크 요청 자체를 막지 않고 무조건 요청 보내고, 서버 응답에 따라 상태 변경
 
-    register.mutate(form);
+    console.log('📤 회원가입 요청:', form);  // 1️⃣ 요청 확인
+
+    // register.mutate(form);
+    register.mutate(form, {
+        onError: (error) => {
+          console.log('❌ register.onError:', error);  // 2️⃣ 에러 잡히나?
+        },
+        onSuccess: (data) => {
+          console.log('✅ 회원가입 성공:', data);  // 3️⃣ 성공?
+        },
+        onSettled: () => {
+          console.log('🔄 register 상태:', { 
+            isError: register.isError, 
+            error: register.error,
+            isPending: register.isPending 
+          });  // 4️⃣ 최종 상태
+        }
+      });
     // register.mutate(form)으로 회원가입 요청
     // // React Query가 백엔드 /auth/register으로 요청 전송
     // // 성공 시 localStorage 저장 + /login 이동은 useAuth.onSuccess에서 처리
@@ -152,7 +203,8 @@ export default function RegisterForm() {
         <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-lg">
           <p className="text-sm text-red-800">
             {/* {(error as any)?.response?.data?.detail || error.message || '회원가입에 실패했습니다.'} */}
-            {(error as AxiosError<{ detail: string }>)?.response?.data?.detail || error.message || '회원가입에 실패했습니다.'}
+            {/* {(error as AxiosError<{ detail: string }>)?.response?.data?.detail || error.message || '회원가입에 실패했습니다.'} */}
+            {getErrorMessage(error)}
           </p>
         </div>
       )}
