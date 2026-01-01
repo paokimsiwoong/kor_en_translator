@@ -63,87 +63,89 @@ export default function LoginForm() {
 
   // JSX 반환 (UI 부분)
   return (
-    <div className="max-w-md mx-auto p-8 bg-white rounded-xl shadow-lg">
-      <div className="text-center mb-8">
-        <h1 className="text-3xl font-bold text-gray-900">로그인</h1>
-        <p className="text-gray-500 mt-2">계정이 있으신가요?</p>
+    <div className="min-h-screen min-w-screen p-8">
+      <div className="max-w-md mx-auto p-8 bg-white rounded-xl shadow-lg">
+        <div className="text-center mb-8">
+          <h1 className="text-3xl font-bold text-gray-900">로그인</h1>
+          <p className="text-gray-500 mt-2">계정이 있으신가요?</p>
+        </div>
+
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              이메일
+            </label>
+            <div className="relative">
+              <Mail className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
+              <input
+                // @@@ onChange={handleChange} 를 사용하기 위해서
+                // @@@ 반드시 name, value 속성이 있어야 한다
+                name="username"
+                type="text"
+                value={form.username}
+                // onChange={(e) => setForm({ ...form, username: e.target.value })}
+                onChange={handleChange}
+                className="w-full pl-11 pr-4 py-3 border border-gray-300 text-gray-900 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                required
+              />
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              비밀번호
+            </label>
+            <div className="relative">
+              <Lock className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
+              <input
+                // @@@ onChange={handleChange} 를 사용하기 위해서
+                // @@@ 반드시 name, value 속성이 있어야 한다
+                name="password"
+                type="password"
+                value={form.password}
+                // onChange={(e) => setForm({ ...form, password: e.target.value })}
+                onChange={handleChange}
+                className="w-full pl-11 pr-4 py-3 border border-gray-300 text-gray-900 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                required
+              />
+            </div>
+          </div>
+
+          <button
+            type="submit"
+            disabled={isPending}
+            className="w-full bg-blue-600 text-white py-3 px-4 rounded-lg font-medium hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2"
+          >
+            {isPending ? (
+              <>
+                <Loader2 className="w-5 h-5 animate-spin" />
+                <span>로그인 중...</span>
+              </>
+            ) : (
+              <span>로그인</span>
+            )}
+          </button>
+        </form>
+
+        <p className="mt-6 text-center text-sm text-gray-600">
+          계정이 없으신가요?{' '}
+          <Link 
+            to="/register" 
+            className="font-medium text-blue-600 hover:text-blue-500 hover:underline focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded"
+          >
+            회원가입
+          </Link>
+        </p>
+
+        {isError && error && (
+          <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-lg">
+            <p className="text-sm text-red-800">
+              {/* {(error as any)?.response?.data?.detail || error.message || '로그인에 실패했습니다.'} */}
+              {(error as AxiosError<{ detail: string }>)?.response?.data?.detail || error.message || '로그인에 실패했습니다.'}
+            </p>
+          </div>
+        )}
       </div>
-
-      <form onSubmit={handleSubmit} className="space-y-6">
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            이메일
-          </label>
-          <div className="relative">
-            <Mail className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
-            <input
-              // @@@ onChange={handleChange} 를 사용하기 위해서
-              // @@@ 반드시 name, value 속성이 있어야 한다
-              name="username"
-              type="text"
-              value={form.username}
-              // onChange={(e) => setForm({ ...form, username: e.target.value })}
-              onChange={handleChange}
-              className="w-full pl-11 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              required
-            />
-          </div>
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            비밀번호
-          </label>
-          <div className="relative">
-            <Lock className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
-            <input
-              // @@@ onChange={handleChange} 를 사용하기 위해서
-              // @@@ 반드시 name, value 속성이 있어야 한다
-              name="password"
-              type="password"
-              value={form.password}
-              // onChange={(e) => setForm({ ...form, password: e.target.value })}
-              onChange={handleChange}
-              className="w-full pl-11 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              required
-            />
-          </div>
-        </div>
-
-        <button
-          type="submit"
-          disabled={isPending}
-          className="w-full bg-blue-600 text-white py-3 px-4 rounded-lg font-medium hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2"
-        >
-          {isPending ? (
-            <>
-              <Loader2 className="w-5 h-5 animate-spin" />
-              <span>로그인 중...</span>
-            </>
-          ) : (
-            <span>로그인</span>
-          )}
-        </button>
-      </form>
-
-      <p className="mt-6 text-center text-sm text-gray-600">
-        계정이 없으신가요?{' '}
-        <Link 
-          to="/register" 
-          className="font-medium text-blue-600 hover:text-blue-500 hover:underline focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded"
-        >
-          회원가입
-        </Link>
-      </p>
-
-      {isError && error && (
-        <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-lg">
-          <p className="text-sm text-red-800">
-            {/* {(error as any)?.response?.data?.detail || error.message || '로그인에 실패했습니다.'} */}
-            {(error as AxiosError<{ detail: string }>)?.response?.data?.detail || error.message || '로그인에 실패했습니다.'}
-          </p>
-        </div>
-      )}
     </div>
   );
 }

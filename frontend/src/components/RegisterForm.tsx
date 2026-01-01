@@ -133,102 +133,104 @@ export default function RegisterForm() {
   };
 
   return (
-    <div className="max-w-md mx-auto p-8 bg-white rounded-xl shadow-lg">
-      <div className="text-center mb-8">
-        <h1 className="text-3xl font-bold text-gray-900">회원가입</h1>
-        <p className="text-gray-500 mt-2">새 계정을 만들어 주세요.</p>
+    <div className="min-h-screen min-w-screen p-8">
+      <div className="max-w-md mx-auto p-8 bg-white rounded-xl shadow-lg">
+        <div className="text-center mb-8">
+          <h1 className="text-3xl font-bold text-gray-900">회원가입</h1>
+          <p className="text-gray-500 mt-2">새 계정을 만들어 주세요.</p>
+        </div>
+
+        <form onSubmit={handleSubmit} className="space-y-6">
+          {/* 이메일 */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">이메일</label>
+            <div className="relative">
+              <Mail className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
+              <input
+                name="email"
+                type="email"
+                value={form.email}
+                onChange={handleChange}
+                className="w-full pl-11 pr-4 py-3 border border-gray-300 text-gray-900 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                required
+              />
+            </div>
+          </div>
+
+          {/* 사용자명 */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">사용자명</label>
+            <div className="relative">
+              <User className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
+              <input
+                name="username"
+                type="text"
+                value={form.username}
+                onChange={handleChange}
+                className="w-full pl-11 pr-4 py-3 border border-gray-300 text-gray-900 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                required
+              />
+            </div>
+          </div>
+
+          {/* 비밀번호 */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">비밀번호</label>
+            <div className="relative">
+              <Lock className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
+              <input
+                name="password"
+                type="password"
+                value={form.password}
+                onChange={handleChange}
+                className="w-full pl-11 pr-4 py-3 border border-gray-300 text-gray-900 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                required
+              />
+            </div>
+          </div>
+
+          <button
+            type="submit"
+            disabled={isPending}  // useAuth 훅에서 가져옴
+            className="w-full bg-green-600 text-white py-3 px-4 rounded-lg font-medium hover:bg-green-700 focus:ring-2 focus:ring-green-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2"
+          >
+            {isPending ? (  // useAuth 훅에서 가져옴
+              <>
+                <Loader2 className="w-5 h-5 animate-spin" />
+                <span>회원가입 중...</span>
+              </>
+            ) : (
+              <span>회원가입</span>
+            )}
+          </button>
+        </form>
+
+        {isError && error && (  // useAuth 훅에서 가져옴
+          <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-lg">
+            <p className="text-sm text-red-800">
+              {/* {(error as any)?.response?.data?.detail || error.message || '회원가입에 실패했습니다.'} */}
+              {/* {(error as AxiosError<{ detail: string }>)?.response?.data?.detail || error.message || '회원가입에 실패했습니다.'} */}
+              {getErrorMessage(error)}
+            </p>
+          </div>
+        )}
+
+        {/* <p className="mt-4 text-center text-sm text-gray-600">
+          이미 계정이 있으신가요?{' '}
+          <Link to="/login" className="text-blue-600 hover:underline">
+            로그인
+          </Link>
+        </p> */}
+        <p className="mt-6 text-center text-sm text-gray-600">
+          이미 계정이 있으신가요?{' '}
+          <Link 
+            to="/login" 
+            className="font-medium text-blue-600 hover:text-blue-500 hover:underline focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded"
+          >
+            로그인
+          </Link>
+        </p>
       </div>
-
-      <form onSubmit={handleSubmit} className="space-y-6">
-        {/* 이메일 */}
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">이메일</label>
-          <div className="relative">
-            <Mail className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
-            <input
-              name="email"
-              type="email"
-              value={form.email}
-              onChange={handleChange}
-              className="w-full pl-11 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              required
-            />
-          </div>
-        </div>
-
-        {/* 사용자명 */}
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">사용자명</label>
-          <div className="relative">
-            <User className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
-            <input
-              name="username"
-              type="text"
-              value={form.username}
-              onChange={handleChange}
-              className="w-full pl-11 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              required
-            />
-          </div>
-        </div>
-
-        {/* 비밀번호 */}
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">비밀번호</label>
-          <div className="relative">
-            <Lock className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
-            <input
-              name="password"
-              type="password"
-              value={form.password}
-              onChange={handleChange}
-              className="w-full pl-11 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              required
-            />
-          </div>
-        </div>
-
-        <button
-          type="submit"
-          disabled={isPending}  // useAuth 훅에서 가져옴
-          className="w-full bg-green-600 text-white py-3 px-4 rounded-lg font-medium hover:bg-green-700 focus:ring-2 focus:ring-green-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2"
-        >
-          {isPending ? (  // useAuth 훅에서 가져옴
-            <>
-              <Loader2 className="w-5 h-5 animate-spin" />
-              <span>회원가입 중...</span>
-            </>
-          ) : (
-            <span>회원가입</span>
-          )}
-        </button>
-      </form>
-
-      {isError && error && (  // useAuth 훅에서 가져옴
-        <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-lg">
-          <p className="text-sm text-red-800">
-            {/* {(error as any)?.response?.data?.detail || error.message || '회원가입에 실패했습니다.'} */}
-            {/* {(error as AxiosError<{ detail: string }>)?.response?.data?.detail || error.message || '회원가입에 실패했습니다.'} */}
-            {getErrorMessage(error)}
-          </p>
-        </div>
-      )}
-
-      {/* <p className="mt-4 text-center text-sm text-gray-600">
-        이미 계정이 있으신가요?{' '}
-        <Link to="/login" className="text-blue-600 hover:underline">
-          로그인
-        </Link>
-      </p> */}
-      <p className="mt-6 text-center text-sm text-gray-600">
-        이미 계정이 있으신가요?{' '}
-        <Link 
-          to="/login" 
-          className="font-medium text-blue-600 hover:text-blue-500 hover:underline focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded"
-        >
-          로그인
-        </Link>
-      </p>
     </div>
   );
 }

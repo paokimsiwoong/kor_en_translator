@@ -178,12 +178,20 @@ export default function Dashboard() {
 
   
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-8">
-      <div className="max-w-2xl mx-auto p-6 bg-white rounded-xl shadow-lg">
+    // <div className="min-h-screen min-w-screen bg-linear-to-r from-blue-50 to-indigo-100 p-8">
+    <div className="min-h-screen min-w-screen p-8">
+      <div className="max-w-2xl mx-auto p-8 bg-white rounded-xl shadow-lg">
+      {/* <div className="max-w-2xl mx-auto p-8 bg-gray-100 rounded-xl shadow-lg"> */}
         {/* 헤더 + 로그아웃 버튼 영역 */}
-        <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center justify-between gap-4 mb-4">
           <h1 className="text-2xl font-bold text-gray-900">대시보드</h1>
-          <button onClick={logout} className="text-sm text-red-600 hover:underline">
+          <button onClick={logout} className="text-sm font-semibold text-white 
+                 bg-linear-to-r from-gray-500 to-gray-600 
+                 hover:from-red-600 hover:to-red-700
+                 rounded-full shadow-lg hover:shadow-xl 
+                 transition-all duration-300 hover:scale-[1.05] 
+                 active:scale-[0.98]"
+          >
             로그아웃
           </button>
         </div>
@@ -200,6 +208,7 @@ export default function Dashboard() {
 
         {/* 한영 번역 섹션 */}
         <section className="mt-12 bg-white rounded-2xl shadow-xl p-8 border border-gray-100">
+        {/* <section className="mt-12 bg-linear-to-r from-gray-300 to-gray-400 rounded-2xl shadow-xl p-8 border border-gray-100"> */}
           <h2 className="text-3xl font-bold text-gray-900 mb-6 flex items-center">
             <span className="w-8 h-8 bg-blue-500 text-white rounded-lg flex items-center justify-center mr-3 text-lg font-bold">
               🌐
@@ -212,6 +221,7 @@ export default function Dashboard() {
 
             {/* 배치 모드 토글, 추가/제거 버튼 영역 */}
             <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-xl">
+            {/* <div className="flex items-center gap-3 p-3 bg-linear-to-r from-gray-50 to-gray-150 rounded-xl"> */}
               {/* 배치 모드 토글 */}
               <label className="flex items-center gap-2 text-sm font-semibold text-gray-700 cursor-pointer select-none flex-1">
                 <input
@@ -230,9 +240,9 @@ export default function Dashboard() {
                 />
                 <span>
                   배치 번역 모드
-                  {!useBatch && translateTexts.length > 1 && (
+                  {/* {useBatch && translateTexts.length > 1 && (
                     <span className="text-xs text-orange-500 ml-1">(단일 문장 번역 모드로 변경)</span>
-                  )}
+                  )} */}
                 </span>
               </label>
               {/* 문장 입력란 추가/제거 버튼 */}
@@ -263,7 +273,9 @@ export default function Dashboard() {
             </div>
 
             {/* 입력 영역들 */}
-            <div className="space-y-4 max-h-96 overflow-y-auto">
+            {/* <div className="space-y-4 max-h-96 overflow-y-auto"> */}
+            {/* p-1 없으면 입력창 foucs시 좌우 잘림 */}
+            <div className="space-y-4 max-h-96 p-1 overflow-y-auto">
               {/* translateTexts 배열 길이에 맞춰서 입력란 복수 생성 */}
               {translateTexts.map((text, index) => (
                 <div key={index} className="relative group">
@@ -274,14 +286,14 @@ export default function Dashboard() {
                     value={text}
                     onChange={(e) => updateText(index, e.target.value)}
                     placeholder={`문장 ${index + 1}을 여기에 입력하세요...`}
-                    className="w-full h-24 p-4 border border-gray-300 rounded-xl resize-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                    className="w-full h-24 p-4 border border-gray-300 bg-linear-to-r from-yellow-50 to-red-50 text-gray-900 rounded-xl resize-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
                     disabled={isPending}
                   />
                   {/* 입력란 2개 이상일 때, 각 입력란 별 제거 버튼 생성 */}
                   {translateTexts.length > 1 && (
                     <button
                       onClick={() => removeTextInput(index)}
-                      className="absolute -top-8 right-0 p-1 text-red-500 hover:bg-red-50 rounded-full transition-colors opacity-0 group-hover:opacity-100"
+                      className="absolute top-19.5 right-1 p-1 text-red-500 hover:bg-red-50 rounded-full transition-colors opacity-0 group-hover:opacity-100"
                       title="제거"
                       disabled={isPending}
                     >
@@ -297,7 +309,7 @@ export default function Dashboard() {
               <button
                 onClick={handleTranslate}
                 disabled={isPending || translateTexts.every(t => !t.trim())}
-                className="flex-1 bg-gradient-to-r from-blue-500 to-blue-600 text-white py-3 px-6 rounded-xl font-semibold hover:from-blue-600 hover:to-blue-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 transition-all duration-200"
+                className="flex-1 bg-linear-to-r from-blue-500 to-blue-600 text-white py-3 px-6 rounded-xl font-semibold hover:from-blue-600 hover:to-blue-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 transition-all duration-200"
               >
                 {isPending ? (
                   <>
@@ -320,7 +332,7 @@ export default function Dashboard() {
                 <div className="space-y-3">
                   {/* result 배열 길이에 맞춰서 결과란 복수 생성 */}
                   {result.map((res, index) => (
-                    <div key={index} className="p-4 bg-gradient-to-r from-green-50 to-blue-50 border rounded-xl">
+                    <div key={index} className="p-4 bg-linear-to-r from-green-50 to-blue-50 border rounded-xl">
                       <div className="flex items-center justify-between mb-2">
                         <span className="text-sm font-medium text-gray-600">결과 {index + 1}</span>
                         {/* 결과 복사 버튼 */}
