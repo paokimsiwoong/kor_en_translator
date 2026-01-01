@@ -66,3 +66,12 @@ button:focus-visible {
     background-color: #f9f9f9;
   }
 }
+
+/* Tailwind CSS 추가 */
+/* @tailwind base;
+@tailwind components;
+@tailwind utilities; */
+/* Tailwind v4는 밑의 한줄만 필요 */
+@import "tailwindcss";
+
+/* @import "@tailwindcss/typography"; 블로그/문서 페이지 등에 사용 - 현재 불필요 */

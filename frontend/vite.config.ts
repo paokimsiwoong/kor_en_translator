@@ -11,6 +11,10 @@ import react from '@vitejs/plugin-react'
 // react
 // // Vite용 React 플러그인
 
+import tailwindcss from '@tailwindcss/vite' 
+// tailwindcss
+// // tailwind v4 플러그인 추가
+
 // https://vite.dev/config/
 // Vite 설정
 // export default defineConfig({
@@ -20,7 +24,10 @@ import react from '@vitejs/plugin-react'
 // Vite 설정 (Vite 프록시 사용하기)
 export default defineConfig({
   // 플러그인 설정
-  plugins: [react()],
+  plugins: [
+    react(),
+    tailwindcss(),
+  ],
   // Vite에 React 관련 기능을 추가
   // // .tsx 파일에서 JSX 사용 가능
   // // React Fast Refresh 지원 (코드 수정 시 상태 유지하면서 컴포넌트만 갱신)

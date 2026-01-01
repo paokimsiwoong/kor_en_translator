@@ -33,6 +33,8 @@ interface FastAPIValidationError {
 
 interface FastAPIErrorResponse {
   detail: string | FastAPIValidationError[];
+  // 일반적인 400 error일 경우 string,
+  // pydantic validation error일 경우 FastAPIValidationError 타입 어레이로 받을 수 있다
 }
 
 const getErrorMessage = (error: unknown): string => {
@@ -40,11 +42,14 @@ const getErrorMessage = (error: unknown): string => {
     const err = error as AxiosError<FastAPIErrorResponse>;
     const detail = err.response?.data?.detail;
     
+    // pydantic validation error일 경우 array
     if (Array.isArray(detail)) {
       return detail
       .map((item: FastAPIValidationError) => item.msg)
       .filter(Boolean)
       .join(', ');
+      // array 각 원소(FastAPIValidationError)의 msg만 남긴 뒤(map)
+      // join으로 하나의 string으로 합친다
     }
     
     return String(detail || err.message || '회원가입 실패');
