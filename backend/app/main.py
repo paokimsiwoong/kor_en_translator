@@ -6,6 +6,10 @@ from fastapi.responses import JSONResponse
 # 422(pydantic validation error) - RequestValidationError
 # 처리하는 핸들러 설정에 사용
 # @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+from fastapi.staticfiles import StaticFiles
+# static 파일 서빙을 추가해 viz html 파일에 접근 가능하게 함
+
 from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 from app.api.v1.routes import translate, auth, users
@@ -84,6 +88,8 @@ app.add_middleware(
     allow_headers=["*"],
     # allow_headers=["Content-Type", "Authorization"], 와 같이 가능한 header 제한 가능
 )
+
+app.mount("/viz", StaticFiles(directory="html_viz"), name="viz")
 
 # API Router는 Mini FastAPI로 app.main.py에서 여러 API를 연결해서 활용
 # 라우터 등록

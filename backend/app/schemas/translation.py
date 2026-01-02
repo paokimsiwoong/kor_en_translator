@@ -44,6 +44,7 @@ class TranslationResponse(BaseModel):
     original: str
     translation: str
     status: str = "success"
+    viz_url: str = None
 
 # 복수 문장 번역 요청
 class BatchTranslationRequest(BaseModel):
@@ -59,6 +60,7 @@ class BatchTranslationResponse(BaseModel):
     original: List[str]
     translation: List[str]
     status: str = "success"
+    viz_url: str = None
 
 class HealthResponse(BaseModel):
     status: str = "healthy"

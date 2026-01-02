@@ -81,7 +81,9 @@ class TranslatorService:
         # @@@ 최대 추론 길이 단순히 settings.MAX_LENGTH를 대신 사용?
 
         if viz:
-            visualize(settings.HTML_PATH, folder_name=user_name, model=self.model, tokenizer=self.tokenizer, inputs=x, preds=preds, n_examples=4)
+            # visualize(settings.HTML_PATH, folder_name=user_name, model=self.model, tokenizer=self.tokenizer, inputs=x, preds=preds, n_examples=4)
+            visualize(settings.HTML_PATH, folder_name=user_name, model=self.model, tokenizer=self.tokenizer, inputs=x, preds=preds, n_examples=x.size(0))
+            # @@@ 임시로 전체 문장 시각화
         
 
         # 후처리
