@@ -18,11 +18,10 @@ import RegisterForm from './components/RegisterForm';
 import Dashboard from './components/Dashboard';
 import ProtectedRoute from './components/ProtectedRoute';
 
-
 function App() {
   return (
     <BrowserRouter>
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-12 px-4">
+      <div className="min-h-screen min-w-screen bg-linear-to-br from-red-50 to-indigo-100 py-12 px-4">
         <Routes>
           <Route path="/login" element={<LoginForm />} />
           <Route path="/register" element={<RegisterForm />} />

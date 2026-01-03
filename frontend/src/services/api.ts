@@ -51,6 +51,7 @@ export interface TranslateResponse {
   original: string | string[];
   translation: string | string[];
   status: 'success';
+  viz_url?: string; // 시각화한 경우 html 파일 경로
 }
 
 

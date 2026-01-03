@@ -7,7 +7,9 @@ from fastapi.responses import JSONResponse
 # 처리하는 핸들러 설정에 사용
 # @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
-from fastapi.staticfiles import StaticFiles
+import os
+# from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
 # static 파일 서빙을 추가해 viz html 파일에 접근 가능하게 함
 
 from fastapi.middleware.cors import CORSMiddleware
@@ -89,7 +91,7 @@ app.add_middleware(
     # allow_headers=["Content-Type", "Authorization"], 와 같이 가능한 header 제한 가능
 )
 
-app.mount("/viz", StaticFiles(directory="html_viz"), name="viz")
+# app.mount("/viz", StaticFiles(directory=VIZ_DIR), name="viz")
 
 # API Router는 Mini FastAPI로 app.main.py에서 여러 API를 연결해서 활용
 # 라우터 등록
@@ -102,6 +104,18 @@ async def root():
     return {"message": "Ko-En Translator API is running", "model_device": settings.DEVICE}
 # localhost:8000에 접근하면 GET 결과를 볼 수 있음
 
+# 하드코딩으로 정확한 html_viz 폴더 경로
+VIZ_DIR = "/home/paokimsiwoong/workspace/github.com/paokimsiwoong/kor_en_translator/backend/html_viz"
+
+# 직접 파일 서빙
+@app.get("/viz/{folder}/{filename}")
+async def direct_file(folder: str, filename: str):
+    file_path = os.path.join(VIZ_DIR, folder, filename)
+    if os.path.exists(file_path):
+        return FileResponse(file_path)
+    return {"error": "File not found", "path": file_path}
+
+
 if __name__ == "__main__":
     # uvicorn.run(app, host="0.0.0.0", port=8000)
     uvicorn.run(
@@ -111,3 +125,4 @@ if __name__ == "__main__":
         reload=True
     )
     # uvicorn.run은 터미널에서 uvicorn app.main:app --reload --host 0.0.0.0 --port 8000 명령어를 사용하는 것과 동일
+

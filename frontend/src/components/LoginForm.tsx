@@ -63,7 +63,7 @@ export default function LoginForm() {
 
   // JSX 반환 (UI 부분)
   return (
-    <div className="min-h-screen min-w-screen p-8">
+    <div className="p-8">
       <div className="max-w-md mx-auto p-8 bg-white rounded-xl shadow-lg">
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold text-gray-900">로그인</h1>

@@ -21,7 +21,8 @@ import { useTranslate } from '../hooks/useTranslate';
 // useTranslate
 // // 번역 기능 제공
 
-import { Loader2, Copy, CopyCheck, Plus, Minus } from 'lucide-react';
+// import { Loader2, Copy, CopyCheck, Plus, Minus, Eye, EyeOff } from 'lucide-react';
+import { Loader2, Copy, CopyCheck, Plus, Minus, Eye} from 'lucide-react';
 // Loader2
 // // 로딩 스피너 아이콘
 // // 번역 버튼 내부 isPending일 때 표시
@@ -68,6 +69,9 @@ export default function Dashboard() {
   const [useBatch, setUseBatch] = useState(false);
   const { singleTranslate, singlePending, singleError, batchTranslate, batchPending, batchError } = useTranslate();
   // useTranslate 훅의 반환값들 할당
+  const [showViz, setShowViz] = useState(false);  // 시각화 토글
+  const [vizUrl, setVizUrl] = useState<string | null>(null);  // viz_url 저장
+
 
   // 복사 완료 여부 확인하는 state와 업데이트 함수
   const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
@@ -134,11 +138,12 @@ export default function Dashboard() {
         response = await batchTranslate({
           texts,  
           max_length: 512,
-          viz: false,
+          viz: showViz,
         } as TranslateBatchRequest);
 
         // 응답의 translation 필드를 result state에 입력
         setResult(response.translation as string[]);
+        setVizUrl(response.viz_url || null);
       } else { // 단일 모드
         // @@@ 단일 모드인 경우는 배열인 texts의 0번 인덱스만 firstText에 할당해 요청에 사용
         const firstText = texts[0];
@@ -146,14 +151,16 @@ export default function Dashboard() {
         response = await singleTranslate({
           text: firstText,
           max_length: 512,
-          viz: false,
+          viz: showViz,
         } as TranslateRequest);
         // 응답의 translation 필드를 result state에 입력
         setResult([response.translation as string]);
+        setVizUrl(response.viz_url || null);
       }
     } catch (error) {
       console.error('번역 에러:', error);
       setResult(['번역에 실패했습니다.']);
+      setVizUrl(null);
     }
   };
 
@@ -179,8 +186,10 @@ export default function Dashboard() {
   
   return (
     // <div className="min-h-screen min-w-screen bg-linear-to-r from-blue-50 to-indigo-100 p-8">
-    <div className="min-h-screen min-w-screen p-8">
-      <div className="max-w-2xl mx-auto p-8 bg-white rounded-xl shadow-lg">
+    // <div className="min-h-screen min-w-screen p-8">
+    // @@@ min-h-screen min-w-screen는 App.tsx에 들어가 있으므로 여기선 삭제
+    <div className="p-8">
+      <div className="max-w-3xl mx-auto p-8 bg-white rounded-xl shadow-lg">
       {/* <div className="max-w-2xl mx-auto p-8 bg-gray-100 rounded-xl shadow-lg"> */}
         {/* 헤더 + 로그아웃 버튼 영역 */}
         <div className="flex items-center justify-between gap-4 mb-4">
@@ -219,7 +228,7 @@ export default function Dashboard() {
           {/* 섹션에서 h2를 제외한 부분 */}
           <div className="space-y-6">
 
-            {/* 배치 모드 토글, 추가/제거 버튼 영역 */}
+            {/* 배치 모드 토글, 문장 입력란 추가/제거 버튼 영역 */}
             <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-xl">
             {/* <div className="flex items-center gap-3 p-3 bg-linear-to-r from-gray-50 to-gray-150 rounded-xl"> */}
               {/* 배치 모드 토글 */}
@@ -245,6 +254,7 @@ export default function Dashboard() {
                   )} */}
                 </span>
               </label>
+
               {/* 문장 입력란 추가/제거 버튼 */}
               <div className="flex gap-1">
                 {/* 추가 버튼 */}
@@ -270,6 +280,33 @@ export default function Dashboard() {
                   </button>
                 )}
               </div>
+            </div>
+
+            <div className="flex items-center justify-center p-3 bg-linear-to-r from-purple-50 to-indigo-50 border border-purple-200 rounded-xl shadow-sm">
+              <label className="flex items-center gap-3 text-sm font-semibold text-purple-800 cursor-pointer select-none hover:text-purple-900 transition-colors">
+                <input
+                  type="checkbox"
+                  checked={showViz}
+                  onChange={(e) => {
+                    setShowViz(e.target.checked);
+                    console.log('시각화 버튼 클릭');
+                  }}
+                  className="w-4 h-4 text-purple-600 bg-purple-100 border-purple-300 
+                            rounded-lg focus:ring-purple-500 focus:ring-2 focus:border-transparent 
+                            transition-all duration-200 cursor-pointer shadow-sm
+                            hover:shadow-md hover:bg-purple-200"
+                  disabled={isPending}
+                />
+                <span className="flex items-center gap-1">
+                  <Eye className="w-4 h-4 text-purple-600" />
+                  Attention score 시각화
+                </span>
+              </label>
+              {showViz && (
+                <span className="ml-4 px-3 py-1 bg-yellow-100 text-yellow-800 text-xs rounded-full font-medium animate-pulse">
+                  활성화됨 (처리 시간 ↑)
+                </span>
+              )}
             </div>
 
             {/* 입력 영역들 */}
@@ -351,6 +388,54 @@ export default function Dashboard() {
                         </button>
                       </div>
                       <p className="whitespace-pre-wrap text-gray-900 leading-relaxed text-sm">{res}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* 시각화 섹션 */}
+            {vizUrl && showViz && result.length > 0 && (
+              <div className="mt-8 p-6 bg-linear-to-r from-purple-50 to-indigo-50 border border-purple-200 rounded-2xl shadow-lg">
+                <h3 className="text-xl font-bold text-purple-900 mb-6 flex items-center gap-2">
+                  <Eye className="w-5 h-5" />
+                  Cross Attention Visualization ({result.length}개)
+                </h3>
+
+                {/* 1열 세로 스크롤 */}
+                <div className="flex flex-col gap-4 max-h-160 overflow-y-auto p-4 bg-white rounded-xl border shadow-md scrollbar-thin scrollbar-thumb-purple-300">
+                  {result.map((_, index) => (
+                    <div key={index} className="w-full shrink-0">
+                      <div className="text-center mb-2">
+                        <span className="text-sm font-medium text-purple-800">결과 #{index + 1}</span>
+                      </div>
+                      <iframe
+                        src={`http://localhost:8000${vizUrl}/decoder_src_${index}.html`}
+                        className="w-full h-128 border rounded-lg shadow-sm"
+                        sandbox="allow-scripts allow-popups"
+                        title={`Attention Map ${index + 1}`}
+                      />
+                      {/* <div className="mt-3 text-center"> */}
+                      <div className="mt-4 flex gap-4 text-sm text-purple-700">
+                        {/* <a 
+                          href={`http://localhost:8000${vizUrl}/decoder_src_${index}.html`}
+                          target="_blank" 
+                          rel="noopener noreferrer" 
+                          className="text-purple-600 hover:text-purple-800 text-sm font-medium underline"
+                        >
+                          전체 화면 보기 →
+                        </a> */}
+                        <a href={`http://localhost:8000${vizUrl}/decoder_src_${index}.html`} target="_blank" rel="noopener noreferrer" className="hover:underline">
+                          Cross Attention
+                        </a>
+                        <a href={`http://localhost:8000${vizUrl}/encoder_self_${index}.html`} target="_blank" rel="noopener noreferrer" className="hover:underline">
+                          Encoder Self
+                        </a>
+                        <a href={`http://localhost:8000${vizUrl}/decoder_self_${index}.html`} target="_blank" rel="noopener noreferrer" className="hover:underline">
+                          Decoder Self
+                        </a>
+                        <span className="text-gray-500">| 별도 페이지에서 확인하기 </span>
+                      </div>
                     </div>
                   ))}
                 </div>

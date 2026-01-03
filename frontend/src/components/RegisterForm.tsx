@@ -111,29 +111,29 @@ export default function RegisterForm() {
 
     console.log('📤 회원가입 요청:', form);  // 1️⃣ 요청 확인
 
-    // register.mutate(form);
-    register.mutate(form, {
-        onError: (error) => {
-          console.log('❌ register.onError:', error);  // 2️⃣ 에러 잡히나?
-        },
-        onSuccess: (data) => {
-          console.log('✅ 회원가입 성공:', data);  // 3️⃣ 성공?
-        },
-        onSettled: () => {
-          console.log('🔄 register 상태:', { 
-            isError: register.isError, 
-            error: register.error,
-            isPending: register.isPending 
-          });  // 4️⃣ 최종 상태
-        }
-      });
+    register.mutate(form);
+    // register.mutate(form, {
+    //     onError: (error) => {
+    //       console.log('❌ register.onError:', error);  // 2️⃣ 에러 잡히나?
+    //     },
+    //     onSuccess: (data) => {
+    //       console.log('✅ 회원가입 성공:', data);  // 3️⃣ 성공?
+    //     },
+    //     onSettled: () => {
+    //       console.log('🔄 register 상태:', { 
+    //         isError: register.isError, 
+    //         error: register.error,
+    //         isPending: register.isPending 
+    //       });  // 4️⃣ 최종 상태
+    //     }
+    //   });
     // register.mutate(form)으로 회원가입 요청
     // // React Query가 백엔드 /auth/register으로 요청 전송
     // // 성공 시 localStorage 저장 + /login 이동은 useAuth.onSuccess에서 처리
   };
 
   return (
-    <div className="min-h-screen min-w-screen p-8">
+    <div className="p-8">
       <div className="max-w-md mx-auto p-8 bg-white rounded-xl shadow-lg">
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold text-gray-900">회원가입</h1>
