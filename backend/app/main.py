@@ -8,6 +8,8 @@ from fastapi.responses import JSONResponse
 # @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 import os
+import shutil
+from contextlib import asynccontextmanager
 # from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
 # static 파일 서빙을 추가해 viz html 파일에 접근 가능하게 함
@@ -25,10 +27,32 @@ from app.db.models import *
 from app.db.base import Base
 from app.db.session import engine
 
+# 하드코딩으로 정확한 html_viz 폴더 경로
+VIZ_DIR = "/home/paokimsiwoong/workspace/github.com/paokimsiwoong/kor_en_translator/backend/html_viz"
+
+# FastAPI lifespan 이벤트를 사용해 서버 시작/종료 시 html_viz 폴더 초기화/삭제
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # ===== 서버 시작 시점 폴더 초기화 =====
+    print(f"Clearing {VIZ_DIR}...")
+    if os.path.exists(VIZ_DIR):
+        shutil.rmtree(VIZ_DIR)
+    os.makedirs(VIZ_DIR, exist_ok=True)
+    print(f"{VIZ_DIR} cleared and recreated")
+    
+    yield  # 서버 실행 중 yield
+    
+    # ===== 서버 종료 시점 폴더 정리 =====
+    print(f"Cleaning up {VIZ_DIR}...")
+    if os.path.exists(VIZ_DIR):
+        shutil.rmtree(VIZ_DIR)
+    print(f"{VIZ_DIR} completely removed")
+
 app = FastAPI(
     title="Kor-En Translator API",
     description="한국어 → 영어 Transformer 번역 서비스",
-    version="1.0.0"
+    version="1.0.0",
+    lifespan=lifespan
 )
 # FastAPI는 자동으로 문서 생성
 # localhost:8000/docs로 문서 접근 가능
@@ -104,8 +128,6 @@ async def root():
     return {"message": "Ko-En Translator API is running", "model_device": settings.DEVICE}
 # localhost:8000에 접근하면 GET 결과를 볼 수 있음
 
-# 하드코딩으로 정확한 html_viz 폴더 경로
-VIZ_DIR = "/home/paokimsiwoong/workspace/github.com/paokimsiwoong/kor_en_translator/backend/html_viz"
 
 # 직접 파일 서빙
 @app.get("/viz/{folder}/{filename}")
