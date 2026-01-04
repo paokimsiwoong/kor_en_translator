@@ -11,12 +11,12 @@ import os
 import shutil
 from contextlib import asynccontextmanager
 # from fastapi.staticfiles import StaticFiles
-from fastapi.responses import FileResponse
+# from fastapi.responses import FileResponse # @@@ viz router로 이동
 # static 파일 서빙을 추가해 viz html 파일에 접근 가능하게 함
 
 from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
-from app.api.v1.routes import translate, auth, users
+from app.api.v1.routes import translate, auth, users, viz
 from app.core.config import settings
 
 # from app.db.models.user import User
@@ -27,8 +27,8 @@ from app.db.models import *
 from app.db.base import Base
 from app.db.session import engine
 
-# 하드코딩으로 정확한 html_viz 폴더 경로
-VIZ_DIR = "/home/paokimsiwoong/workspace/github.com/paokimsiwoong/kor_en_translator/backend/html_viz"
+# html_viz 폴더 절대 경로
+VIZ_DIR = settings.HTML_PATH_ABS
 
 # FastAPI lifespan 이벤트를 사용해 서버 시작/종료 시 html_viz 폴더 초기화/삭제
 @asynccontextmanager
@@ -122,20 +122,12 @@ app.add_middleware(
 app.include_router(translate.router, prefix="/api/v1")
 app.include_router(auth.router, prefix="/api/v1")
 app.include_router(users.router, prefix="/api/v1")
+app.include_router(viz.router, prefix="/api/v1")
 
 @app.get("/")
 async def root():
     return {"message": "Ko-En Translator API is running", "model_device": settings.DEVICE}
 # localhost:8000에 접근하면 GET 결과를 볼 수 있음
-
-
-# 직접 파일 서빙
-@app.get("/viz/{folder}/{filename}")
-async def direct_file(folder: str, filename: str):
-    file_path = os.path.join(VIZ_DIR, folder, filename)
-    if os.path.exists(file_path):
-        return FileResponse(file_path)
-    return {"error": "File not found", "path": file_path}
 
 
 if __name__ == "__main__":

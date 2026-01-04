@@ -20,6 +20,7 @@ WEIGHT_TYING: "NOTYING"      # NOTYING, TYINGALL, TYINGSRCTGT, TYINGTGTFFC, TYIN
 # 시각화 옵션
 VISUALIZATION: true          # true / false
 HTML_PATH: "html_viz"
+HTML_PATH_ABS: "/home/paokimsiwoong/workspace/github.com/paokimsiwoong/kor_en_translator/backend/html_viz"
 
 # 인퍼런스 관련
 MAX_LENGTH: 512

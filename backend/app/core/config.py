@@ -48,7 +48,8 @@ class Settings:
 
     # bool은 문자열 비교 대신 직접 bool로 저장
     VISUALIZATION: bool = bool(_cfg.get("VISUALIZATION", True))
-    HTML_PATH: str = _cfg.get("HTML_PATH", "models")
+    HTML_PATH: str = _cfg.get("HTML_PATH", "html_viz")
+    HTML_PATH_ABS: str = _cfg.get("HTML_PATH_ABS", "html_viz")
 
     MAX_LENGTH: int = int(_cfg.get("MAX_LENGTH", 512))
 

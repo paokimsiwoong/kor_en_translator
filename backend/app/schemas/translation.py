@@ -62,6 +62,10 @@ class BatchTranslationResponse(BaseModel):
     status: str = "success"
     viz_url: str = None
 
+# attentino 시각화 html 응답
+class VizResponse(BaseModel):
+    html: str
+
 class HealthResponse(BaseModel):
     status: str = "healthy"
     model_loaded: bool
