@@ -74,7 +74,6 @@ ko-en-translator/
 ## TODO
 - [X] 유저 등록 및 로그인 - 보안
 - [X] viz True 일 경우 attention score 결과 html 보내기
-    - [ ] backend 절대 경로 대신 frontend 경로로 변경하기
 - [ ] docker 사용해보기 (docker-compose로 백/프론트 동시 실행?)
 - [X] front 만들기
     - [ ] 토큰 만료 기간 표시 및 만료 시 로그인 풀기, 로그인 연장(토큰 재발급) 버튼 추가

@@ -27,7 +27,7 @@ class TranslationService:
             result = translator.translate([request.text], request.max_length, viz=request.viz, user_name=user_name)
 
             if request.viz:
-                return TranslationResponse(original=request.text, translation=result[0] if len(result) != 0 else "", viz_url=f"/viz/{user_name}")
+                return TranslationResponse(original=request.text, translation=result[0] if len(result) != 0 else "", viz_url=f"/api/v1/viz/{user_name}")
 
             return TranslationResponse(original=request.text, translation=result[0] if len(result) != 0 else "")
         except Exception as e:
@@ -43,7 +43,7 @@ class TranslationService:
             results = translator.translate(request.texts, request.max_length, viz=request.viz, user_name=user_name)
 
             if request.viz:
-                return BatchTranslationResponse(original=request.texts, translation=results, viz_url=f"/viz/{user_name}")
+                return BatchTranslationResponse(original=request.texts, translation=results, viz_url=f"/api/v1/viz/{user_name}")
 
             return BatchTranslationResponse(original=request.texts, translation=results)
         except Exception as e:

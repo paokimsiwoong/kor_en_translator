@@ -54,11 +54,6 @@ export interface TranslateResponse {
   viz_url?: string; // 시각화한 경우 html 파일 경로
 }
 
-export interface VizResponse {
-  html: string;  // HTML 문자열
-}
-
-
 // Axios 인스턴스를 생성해 api에 할당
 const api = axios.create({
   // baseURL: 'http://localhost:8000/api/v1', 

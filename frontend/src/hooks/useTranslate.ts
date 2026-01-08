@@ -3,7 +3,7 @@
 
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import api, { type TranslateRequest, type TranslateBatchRequest, type TranslateResponse, type VizResponse } from '../services/api';
+import api, { type TranslateRequest, type TranslateBatchRequest, type TranslateResponse} from '../services/api';
 // api
 // // Axios 인스턴스.
 // // // baseURL, 기본 헤더, Authorization 인터셉터 등이 설정되어 있다고 가정하는 HTTP 클라이언트
@@ -29,12 +29,6 @@ export const translateBatch = async (data: TranslateBatchRequest): Promise<Trans
   return response.data;
 };
 
-export const getVizHtml = async (htmlUrl: string): Promise<VizResponse> => {
-  const response = await api.get<VizResponse>(htmlUrl);
-  return response.data;
-};
-
-
 // useTranslate
 // // 컴포넌트에서 const { singleTranslate, singlePending, singleError } = useTranslate()처럼 호출해서 인증 관련 기능을 쓰는 커스텀 훅
 export const useTranslate = () => {
@@ -56,10 +50,6 @@ export const useTranslate = () => {
     },
   });
 
-  const getViz = useMutation({
-    mutationFn: getVizHtml
-  });
-
   return {
     // singleTranslate: singleTranslate.mutate,
     // @@@ mutate는 응답 데이터를 onSuccess 안에서만 사용 가능하고
@@ -73,10 +63,6 @@ export const useTranslate = () => {
     batchTranslate: batchTranslate.mutateAsync,
     batchPending: batchTranslate.isPending,
     batchError: batchTranslate.error,
-
-    getViz: getViz.mutateAsync,
-    vizPending: getViz.isPending,
-    vizError: getViz.error,
   };
 // return값을 받는 쪽에서 단일 번역할 경우 
 // api.post('/v1/translate', data)를 하는 singleTranslate: singleTranslate.mutate를 사용하고

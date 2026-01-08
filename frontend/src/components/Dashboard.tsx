@@ -1,14 +1,14 @@
 // Dashboard.tsx
 // 로그인 후에 보여지는 페이지 관리
 
-import { useState } from 'react';
+import { useState} from 'react';
 // useState
 // // React 상태 훅
 
 import { useQuery } from '@tanstack/react-query';
 // useQuery
 // // 서버 데이터 자동 가져오기 + 캐싱 + 로딩/에러 상태
-import api, { type User, type TranslateRequest, type TranslateBatchRequest, type TranslateResponse } from '../services/api';
+import api, { type User, type TranslateRequest, type TranslateBatchRequest, type TranslateResponse} from '../services/api';
 // api
 // // Axios 인스턴스
 // User
@@ -67,11 +67,11 @@ export default function Dashboard() {
   const [result, setResult] = useState<string[]>([]);  // 배치모드를 위해 배열로 변경
   // @@@ 단일 문장 번역일 때는 배열의 0번 인덱스만 사용하도록 코드를 변경한다
   const [useBatch, setUseBatch] = useState(false);
-  const { singleTranslate, singlePending, singleError, batchTranslate, batchPending, batchError } = useTranslate();
+  const { singleTranslate, singlePending, singleError, batchTranslate, batchPending, batchError} = useTranslate();
   // useTranslate 훅의 반환값들 할당
+
   const [showViz, setShowViz] = useState(false);  // 시각화 토글
   const [vizUrl, setVizUrl] = useState<string | null>(null);  // viz_url 저장
-
 
   // 복사 완료 여부 확인하는 state와 업데이트 함수
   const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
@@ -289,7 +289,7 @@ export default function Dashboard() {
                   checked={showViz}
                   onChange={(e) => {
                     setShowViz(e.target.checked);
-                    console.log('시각화 버튼 클릭');
+                    // console.log('시각화 버튼 클릭');
                   }}
                   className="w-4 h-4 text-purple-600 bg-purple-100 border-purple-300 
                             rounded-lg focus:ring-purple-500 focus:ring-2 focus:border-transparent 
@@ -415,16 +415,7 @@ export default function Dashboard() {
                         sandbox="allow-scripts allow-popups"
                         title={`Attention Map ${index + 1}`}
                       />
-                      {/* <div className="mt-3 text-center"> */}
                       <div className="mt-4 flex gap-4 text-sm text-purple-700">
-                        {/* <a 
-                          href={`http://localhost:8000${vizUrl}/decoder_src_${index}.html`}
-                          target="_blank" 
-                          rel="noopener noreferrer" 
-                          className="text-purple-600 hover:text-purple-800 text-sm font-medium underline"
-                        >
-                          전체 화면 보기 →
-                        </a> */}
                         <a href={`http://localhost:8000${vizUrl}/decoder_src_${index}.html`} target="_blank" rel="noopener noreferrer" className="hover:underline">
                           Cross Attention
                         </a>
