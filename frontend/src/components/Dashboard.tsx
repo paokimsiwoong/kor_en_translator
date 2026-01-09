@@ -37,12 +37,15 @@ import { Loader2, Copy, CopyCheck, Plus, Minus, Eye} from 'lucide-react';
 // // 눌리면 새로운 입력란 추가
 // Minus
 // // 입력란 제거 버튼
+// Eye
+// // 시각화 섹션에 쓰이는 눈 모양 아이콘
 
 export default function Dashboard() {
   const { logout } = useAuth();
   // Destructuring : useAuth의 반환값 중 필요한 logout만 받아서 사용하고 나머지 무시
 
   // /users/me 호출 후 결과 캐시에 저장
+  // -> 저장한 유저 정보는 반환되는 JSX의 사용자 정보 표시 영역에서 사용
   // @@@ 자세한 설명은 ProtectedRoute.tsx 확인
   const { data: user } = useQuery<User>({  // 제네릭(<>)으로 반환 타입 지정
     queryKey: ['me'],  // 쿼리 고유 키
@@ -314,6 +317,13 @@ export default function Dashboard() {
             {/* p-1 없으면 입력창 foucs시 좌우 잘림 */}
             <div className="space-y-4 max-h-96 p-1 overflow-y-auto">
               {/* translateTexts 배열 길이에 맞춰서 입력란 복수 생성 */}
+              {/* array.map(element => (element 변환 코드))는 */}
+              {/*  어레이의 각 원소에 지정한 변환 코드(매핑)을 적용한 결과들을 담은 새 어레이를 반환한다 */}
+              {/* array.map((element, index) => (element, index 변환 코드))는 */}
+              {/* 각 원소의 index도 같이 사용 가능 */}
+              {/* 따라서 translateTexts.map((text, index) => (div 블록))는 */}
+              {/* 각 원소 text마다 그 text와 연결된 입력영역을 표시하는 html div 블록을 매핑하고 */}
+              {/* 그 div 블록들을 모든 새 array를 반환한다 */}
               {translateTexts.map((text, index) => (
                 <div key={index} className="relative group">
                   <label className="block text-xs font-medium text-gray-500 mb-1">

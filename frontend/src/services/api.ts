@@ -2,6 +2,23 @@
 // axios 인스턴스를 생성하고, 공통 HTTP 요청 로직을 여기에 중앙화
 
 // import axios from 'axios';
+// axios
+// // Axios는 JavaScript/TypeScript용 HTTP 클라이언트 라이브러리
+// // // 이 Axios의 AxiosInstance로 백엔드에 요청(GET,POST 등)을 하고 응답을 받는다
+// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+// @@@ fetch 대신 axios 쓰는 이유 @@@
+// fetch: JSON 자동 파싱 안됨 -> response.json() 수동 호출
+// fetch: 네트워크 에러만 catch -> HTTP 400도 성공 처리
+// fetch: 인터셉터 없음 -> 토큰 매번 수동 추가
+
+// Axios: JSON 자동 파싱
+// Axios: HTTP 에러(400, 401 등) 자동 catch
+// Axios: 인터셉터로 토큰 자동화
+// Axios: 요청/응답 취소
+// Axios: 타임아웃 설정
+// Axios: 브라우저 호환성 완벽
+// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
 // @@@ ESLint가 as any를 사용 금지
 import axios, { type AxiosInstance, type InternalAxiosRequestConfig } from 'axios';
 // // @@@ addTokenInterceptor의 as any 두부분 수정에 사용

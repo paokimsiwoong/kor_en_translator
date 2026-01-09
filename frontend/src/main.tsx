@@ -35,9 +35,19 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
     <QueryClientProvider client={queryClient}>
       <App />
+      {/* <App /> -> React가 App.tsx의 App 함수 자동 호출 */}
+        {/* (JSX 태그 <App /> = React는 JSX를 만나면 자동으로 해당 컴포넌트 함수를 실행) */}
+        {/* App 함수 실행 -> JSX 반환 */}
+      {/* React가 JSX를 DOM으로 변환 -> root div에 렌더링 */}
     </QueryClientProvider>
   </React.StrictMode>,
 );
+// document.getElementById('root')로 index.html에 있는 div#root를 가져오고
+// createRoot(...).render(...)로 그 안에
+// <React.StrictMode> -> <QueryClientProvider> -> <App /> 트리를 DOM으로 렌더링
+// 결과적으로 빈 div#root가 React 앱 전체로 대체되는 구조
+
+
 // createRoot
 // // Concurrent Root 생성
 // document.getElementById('root')

@@ -89,5 +89,9 @@ export default function ProtectedRoute({ children }: ProtectedRouteProps) {
   }
 
   // 인증 성공 시 자식 페이지(ex: /dashboard) 표시
-  return <>{children}</>;
+  // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+  return children;
+  // return <>{children}</>;
+  // 굳이 <></>로 감쌀 필요 없다
+  // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 }

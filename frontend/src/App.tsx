@@ -18,6 +18,12 @@ import RegisterForm from './components/RegisterForm';
 import Dashboard from './components/Dashboard';
 import ProtectedRoute from './components/ProtectedRoute';
 
+// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+// @@@ export 없어도 되는 이유 @@@
+// 여기서 명시적으로 export default function App() ... 를 하거나 함수 뒤에 export default App;를 추가하지 않아도
+// ES6의 Default Export 규칙에 따라서 export default가 있다고 가정하고
+// Vite/TypeScript가 자동으로 export default App으로 처리한다
+// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 function App() {
   return (
     <BrowserRouter>
