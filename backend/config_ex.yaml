@@ -1,5 +1,5 @@
 # 모델 경로
-MODEL_PATH: "models/transformer_koren_20251209_213317_latest.pth"
+MODEL_PATH: "models/모델가중치파일.pth"
 
 # 토크나이저
 TOKENIZER_NAME: "KETI-AIR/ke-t5-base"
@@ -20,13 +20,13 @@ WEIGHT_TYING: "NOTYING"      # NOTYING, TYINGALL, TYINGSRCTGT, TYINGTGTFFC, TYIN
 # 시각화 옵션
 VISUALIZATION: true          # true / false
 HTML_PATH: "html_viz"
-HTML_PATH_ABS: "/home/paokimsiwoong/workspace/github.com/paokimsiwoong/kor_en_translator/backend/html_viz"
+HTML_PATH_ABS: "html_viz 폴더 절대경로 입력"
 
 # 인퍼런스 관련
 MAX_LENGTH: 512
 BATCH_SIZE: 1
 
 # 유저 인증 관련
-SECRET_KEY: "XqLhcUliekKYkaTip6JDVArisyhmQ3pe9ItrAnUSSnPeynRk4KJxAzraL2BLu00QNHCm7nM4+z+DYRMA9OEkAQ=="  # 환경변수에서 로드 추천
+SECRET_KEY: "openssl rand -base64 64 등의 명령어로 생성해서 입력" 
 ALGORITHM: "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES: 30

@@ -51,4 +51,5 @@ backend/
 
 ## TODO
 - [X] 유저 등록 및 로그인 - 보안
-- [ ] viz True 일 경우 attention score 결과 html 보내기
+- [X] viz True 일 경우 attention score 결과 html 보내기
+    - html 파일을 생성하고 해당 파일을 제공하는 경로 정보를 보내는 방식으로 구현

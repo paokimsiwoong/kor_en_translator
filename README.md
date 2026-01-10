@@ -1,7 +1,16 @@
 # Kor_En_translator
 ---
-## 한국어 문장을 담은 요청에 영어로 번역한 답변을 내놓는 간단한 http 서버
+## 한국어 -> 영어 Transformer 번역기
 
+## 주요 기능
+- **한국어 -> 영어** Transformer 모델 추론
+- **Attention 시각화** (Altair 히트맵)
+- **JWT 인증** (로그인/회원가입)
+- **배치 번역** 지원 (여러 문장 동시 처리)
+
+## 기술 스택
+Backend: FastAPI + PyTorch + SQLAlchemy + SQLite
+Frontend: React 18 + Vite + TypeScript + Tailwind + React Query
 
 ko-en-translator/
 ├── backend/
@@ -50,26 +59,61 @@ ko-en-translator/
 │   ├── tests/
 │   │   ├── \_\_init__.py
 │   │   └── test_translate.py    # 간단한 API/서빙 테스트
-│   └── config.yaml    # 설정 파일
+│   └── config_ex.yaml    # 설정 파일 예시
 │   
 ├── frontend/
-│   ├── public/
+│   ├── public/                       # 정적 파일 (favicon, 로고 등)
 │   ├── src/
-│   │   ├── components/
-│   │   │   ├── LoginForm.tsx
-│   │   │   ├── RegisterForm.tsx
-│   │   │   └── ProtectedRoute.tsx
-│   │   ├── hooks/
-│   │   │   └── useAuth.ts
-│   │   ├── services/
-│   │   │   └── api.ts
-│   │   ├── App.tsx
-│   │   └── main.tsx
-│   ├── vite.config.ts
-│   └── package.json
+│   │   ├── components/               # 재사용 가능한 UI 컴포넌트들
+│   │   │   ├── LoginForm.tsx         # 로그인 폼 UI + 로직
+│   │   │   ├── RegisterForm.tsx      # 회원가입 폼 UI + 로직
+│   │   │   ├── ProtectedRoute.tsx    # 인증 보호 라우터 컴포넌트
+│   │   │   └── Dashboard.tsx         # 메인 대시보드 (번역 UI)
+│   │   ├── hooks/                    # 커스텀 React 훅들
+│   │   │   ├── useAuth.ts            # 인증 상태 + 로그인/로그아웃 로직
+│   │   │   └── useTranslate.ts       # 번역 API 호출 + 상태 관리 훅
+│   │   ├── services/                 # API 클라이언트
+│   │   │   └── api.ts                # Axios 인스턴스 + 토큰 인터셉터 + 타입 정의
+│   │   ├── App.tsx                   # 최상위 컴포넌트 (라우터 설정)
+│   │   ├── index.css                 # 전역 CSS (Tailwind)
+│   │   └── main.tsx                  # React 앱 진입점 (ReactDOM.render)
+│   ├── index.html                    # HTML 엔트리포인트 (#root 컨테이너)
+│   ├── vite.config.ts                # Vite 빌드/개발 서버 설정 (프록시 등)
+│   ├── eslint.config.js              # ESLint 설정 (Flat Config)
+│   ├── tsconfig.json                 # TypeScript 루트 설정 (분리 컴파일)
+│   │   ├── tsconfig.app.json         # 브라우저 앱용 TS 설정 (src/)
+│   │   └── tsconfig.node.json        # Node.js 설정용 TS 설정 (vite.config.ts)
+│   └── package.json                  # 프론트엔드 의존성 + 스크립트
 │
-├── Dockerfile               # 선택: 배포용
 └── README.md
+
+
+## 빠른 시작
+
+@@@ yaml파일, 모델 pth 파일등 설정 설명 추가하기
+
+```bash
+# 백엔드
+cd backend
+uv sync
+uv run -m app.main
+
+# 프론트엔드 (별도 터미널)
+cd frontend
+npm install
+npm run dev
+```
+
+## API 엔드포인트
+
+POST /api/v1/auth/register           # 회원가입
+POST /api/v1/auth/login              # 로그인 (JWT 발급)
+POST /api/v1/translate               # 단일 번역 + viz_url
+POST /api/v1/translate/batch         # 배치 번역 + 다중 viz_url
+GET  /api/v1/translate/health        # 모델 로딩 상태 확인
+GET  /api/v1/users/me                # 현재 로그인된 유저 정보 확인
+GET  /api/v1/viz/{folder}/{file}     # iframe용 공개 HTML(attention score 시각화 파일)
+
 
 ## TODO
 - [X] 유저 등록 및 로그인 - 보안
