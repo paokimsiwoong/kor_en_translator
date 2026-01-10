@@ -3,7 +3,7 @@
 ## 한국어 -> 영어 Transformer 번역기
 
 ## 주요 기능
-- **한국어 -> 영어** Transformer 모델 추론
+- **한국어 -> 영어** Transformer 모델 추론 - https://github.com/paokimsiwoong/transformer_experiments 에서 학습한 모델
 - **Attention 시각화** (Altair 히트맵)
 - **JWT 인증** (로그인/회원가입)
 - **배치 번역** 지원 (여러 문장 동시 처리)
@@ -59,7 +59,7 @@ ko-en-translator/
 │   ├── tests/
 │   │   ├── \_\_init__.py
 │   │   └── test_translate.py    # 간단한 API/서빙 테스트
-│   └── config_ex.yaml    # 설정 파일 예시
+│   └── config_ex.yaml    # config.yaml 설정 파일 예시
 │   
 ├── frontend/
 │   ├── public/                       # 정적 파일 (favicon, 로고 등)
@@ -77,6 +77,7 @@ ko-en-translator/
 │   │   ├── App.tsx                   # 최상위 컴포넌트 (라우터 설정)
 │   │   ├── index.css                 # 전역 CSS (Tailwind)
 │   │   └── main.tsx                  # React 앱 진입점 (ReactDOM.render)
+│   ├── .env_example                  # .env 파일 예시
 │   ├── index.html                    # HTML 엔트리포인트 (#root 컨테이너)
 │   ├── vite.config.ts                # Vite 빌드/개발 서버 설정 (프록시 등)
 │   ├── eslint.config.js              # ESLint 설정 (Flat Config)
@@ -90,7 +91,7 @@ ko-en-translator/
 
 ## 빠른 시작
 
-@@@ yaml파일, 모델 pth 파일등 설정 설명 추가하기
+@@@ yaml파일, .env 파일, 모델 pth 파일(https://github.com/paokimsiwoong/transformer_experiments에서 학습)등 설정 설명 추가하기
 
 ```bash
 # 백엔드
