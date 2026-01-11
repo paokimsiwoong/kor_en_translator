@@ -14,6 +14,7 @@
     <img width="515" height="559" alt="login" src="https://github.com/user-attachments/assets/cedeac89-6ea2-4709-8f0b-0a7851556dd5" /><br>
     <img width="529" height="635" alt="register" src="https://github.com/user-attachments/assets/30054d93-375d-4b7a-bb1d-005ed60f35a7" /><br>
 
+---
 ### 프로젝트 구조
 - Backend: FastAPI + PyTorch + SQLAlchemy + SQLite
 - Frontend: Vite + TypeScript + Tailwind + React 18 + React Query
@@ -95,7 +96,7 @@ ko-en-translator/<br>
 │<br>
 └──&nbsp;README.md<br>
 
-
+---
 ### 빠른 시작
 
 1. backend 폴더에 config.yaml 파일 생성
@@ -117,6 +118,7 @@ npm install
 npm run dev
 ```
 
+---
 ### API 엔드포인트
 
 - POST /api/v1/auth/register           # 회원가입
@@ -127,7 +129,7 @@ npm run dev
 - GET  /api/v1/users/me                # 현재 로그인된 유저 정보 확인
 - GET  /api/v1/viz/{folder}/{file}     # iframe용 공개 HTML(attention score 시각화 파일)
 
-
+---
 ### TODO
 - [X] 유저 등록 및 로그인 - 보안
 - [X] viz True 일 경우 attention score 결과 html 보내기
