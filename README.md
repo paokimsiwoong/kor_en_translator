@@ -4,10 +4,15 @@
 
 ### 주요 기능
 - **한국어 -> 영어** Transformer 모델 추론 
-    - https://github.com/paokimsiwoong/transformer_experiments 에서 학습한 모델
+    - https://github.com/paokimsiwoong/transformer_experiments 에서 학습한 
+<img width="918" height="814" alt="translate" src="https://github.com/user-attachments/assets/2c8d3129-a29a-458f-bc2c-f5a9d5cf21b0" />
 - **Attention 시각화** (Altair 히트맵)
+<img width="833" height="917" alt="visualization" src="https://github.com/user-attachments/assets/347dd741-1b6d-4856-af4a-03682dc42faf" />
 - **JWT 인증** (로그인/회원가입)
+<img width="515" height="559" alt="login" src="https://github.com/user-attachments/assets/cedeac89-6ea2-4709-8f0b-0a7851556dd5" />
+<img width="529" height="635" alt="register" src="https://github.com/user-attachments/assets/30054d93-375d-4b7a-bb1d-005ed60f35a7" />
 - **배치 번역** 지원 (여러 문장 동시 처리)
+<img width="907" height="914" alt="batch" src="https://github.com/user-attachments/assets/b9654304-c305-4859-ad1c-41f0c5106741" />
 
 ### 프로젝트 구조
 - Backend: FastAPI + PyTorch + SQLAlchemy + SQLite
