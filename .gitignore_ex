@@ -1,0 +1,31 @@
+# 이 .gitignore 파일 자체도 git이 무시하라고 알려주기
+.gitignore
+
+__pycache__/
+.pytest_cache
+
+.venv
+.env
+
+test_*.ipynb
+
+*.pth
+
+backend/config.yaml
+
+# sqlite db
+app.db
+
+# Vite
+/dist
+/node_modules
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+.DS_Store
+Thumbs.db
+
+html_viz/
