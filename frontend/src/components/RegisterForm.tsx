@@ -27,8 +27,8 @@ interface FastAPIValidationError {
   type: string;
   loc: string[];
   msg: string;
-  input: any;
-  ctx: Record<string, any>;
+  input: unknown; // @@@ any 수정 필요
+  ctx: Record<string, unknown>; // @@@ any 수정 필요
 }
 
 interface FastAPIErrorResponse {
