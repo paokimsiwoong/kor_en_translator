@@ -65,15 +65,15 @@ ko-en-translator/<br>
 ├── frontend/<br>
 │   ├── public/                       # 정적 파일 (favicon, 로고 등)<br>
 │   ├── src/<br>
-│   │   ├── components/               # 재사용 가능한 UI 컴포넌트들<br>
+│   │   ├── components/<br>
 │   │   │   ├── LoginForm.tsx         # 로그인 폼 UI + 로직<br>
 │   │   │   ├── RegisterForm.tsx      # 회원가입 폼 UI + 로직<br>
 │   │   │   ├── ProtectedRoute.tsx    # 인증 보호 라우터 컴포넌트<br>
 │   │   │   └── Dashboard.tsx         # 메인 대시보드 (번역 UI)<br>
-│   │   ├── hooks/                    # 커스텀 React 훅들<br>
+│   │   ├── hooks/<br>
 │   │   │   ├── useAuth.ts            # 인증 상태 + 로그인/로그아웃 로직<br>
 │   │   │   └── useTranslate.ts       # 번역 API 호출 + 상태 관리 훅<br>
-│   │   ├── services/                 # API 클라이언트<br>
+│   │   ├── services/<br>
 │   │   │   └── api.ts                # Axios 인스턴스 + 토큰 인터셉터 + 타입 정의<br>
 │   │   ├── App.tsx                   # 최상위 컴포넌트 (라우터 설정)<br>
 │   │   ├── index.css                 # 전역 CSS (Tailwind)<br>
@@ -81,8 +81,8 @@ ko-en-translator/<br>
 │   ├── .env_example                  # .env 파일 예시<br>
 │   ├── index.html                    # HTML 엔트리포인트 (#root 컨테이너)<br>
 │   ├── vite.config.ts                # Vite 빌드/개발 서버 설정 (프록시 등)<br>
-│   ├── eslint.config.js              # ESLint 설정 (Flat Config)<br>
-│   ├── tsconfig.json                 # TypeScript 루트 설정 (분리 컴파일)<br>
+│   ├── eslint.config.js              # ESLint 설정<br>
+│   ├── tsconfig.json                 # TypeScript 루트 설정<br>
 │   │   ├── tsconfig.app.json         # 브라우저 앱용 TS 설정 (src/)<br>
 │   │   └── tsconfig.node.json        # Node.js 설정용 TS 설정 (vite.config.ts)<br>
 │   ├── package.json                  # 프론트엔드 필요 패키지 + 스크립트 정보<br>
@@ -127,5 +127,3 @@ npm run dev
 - [X] 유저 등록 및 로그인 - 보안
 - [X] viz True 일 경우 attention score 결과 html 보내기
 - [ ] docker 사용해보기 (docker-compose로 백/프론트 동시 실행?)
-- [X] front 만들기
-    - [ ] 토큰 만료 기간 표시 및 만료 시 로그인 풀기, 로그인 연장(토큰 재발급) 버튼 추가
